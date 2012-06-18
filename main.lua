@@ -1757,12 +1757,12 @@ function clickCallback ( down )
 				
 				if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
 					--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
-					add_actor(bx,by+0.25,0.25,0.25,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
+					add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
 				end
 				
 				if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
 					--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-					add_actor(bx,by+0.25,0.25,0.25,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
+					add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
 				end	
 			end
 				
@@ -2182,7 +2182,7 @@ fitter:insertAnchor ( anchor2 )
 add_actor(-5,-5,1,1,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
 add_actor(-8,-5,2,2,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000)
 add_actor(0,-5,1.5,1.5,0.5,0.3,0.2,"Player3","","Dynamic","face_circle_tiled4.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(2,-5,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled5.png",particletexture1,smokeparticletexture1,"False",2000)
+add_actor(2,-5,1.2,1.2,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled5.png",particletexture1,smokeparticletexture1,"False",2000)
 
 -- add a load of boxes
 for x=1,10,2 do 
@@ -2191,14 +2191,12 @@ add_actor(5+x,y,x/5,y/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",pa
 end
 end
 
-
---[[
---add some player objects
-add_actor(0,0,0.75,0.75,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(0,-3,1,1,0.5,0.3,0.1,"Player1","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"True",1000)
-add_actor(0,5,0.7,0.7,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",1000)
-add_actor(0,5,1,1,0.5,0.3,0.4,"Player3","","Dynamic","face_circle_tiled4.png",particletexture1,smokeparticletexture1,"False",1000)
-
+-- add a load of boxes
+for x=1,10,2 do 
+for y=1,10,2 do 
+add_actor(5+x,y,x/5,y/5,0.5,0.5,0.1,"Box","","Dynamic","face_box_tiled2.png",particletexture1,smokeparticletexture2,"False",500,10)
+end
+end
 
 --add some treasure
 add_actor(0,5,1,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled1.png",particletexture5,smokeparticletexture1,"False",1,10000)
@@ -2206,15 +2204,6 @@ add_actor(5,5,4,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled2.png",
 add_actor(8,5,1,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled3.png",particletexture5,smokeparticletexture1,"False",1,10000)
 add_actor(9,5,1,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled4.png",particletexture5,smokeparticletexture1,"False",1,10000)
 
---add_actor(x,y,width,height,density,friction,restitution,actorname,treasure,bodytype,texture_image,particle_texture,smoke_texture,welded,health)
-
--- add a load of boxes
-for x=1,10,2 do 
-for y=1,10,2 do 
-add_actor(5+x,y,x/5,y/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",100,10)
-end
-end
---]]
 
 end
 
