@@ -257,7 +257,7 @@ button_level2:setDeck ( gfxQuad )
 button_level2.name = "button_level2" 
 
 gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button1.png" )
+gfxQuad:setTexture ( assetdirectory.."button9.png" )
 gfxQuad:setRect ( -32,-32,32,32)
 button_game_exit = MOAIProp2D.new ()
 button_game_exit:setDeck ( gfxQuad )
@@ -1612,6 +1612,8 @@ function clickCallback ( down )
 			bx,by=actor_bodies[mainplayer]:getPosition()
 			vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 			actor_bodies[mainplayer]:applyLinearImpulse ( 0,2,bx,by )
+			
+			anchor2:setParent ( actor_sprites[mainplayer] )
 	
 			end
 			
@@ -1620,6 +1622,8 @@ function clickCallback ( down )
 			bx,by=actor_bodies[mainplayer]:getPosition()
 			vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 			actor_bodies[mainplayer]:applyLinearImpulse ( -1,0,bx,by )
+			
+			anchor2:setParent ( actor_sprites[mainplayer] )
 	
 			end
 			
@@ -1628,6 +1632,8 @@ function clickCallback ( down )
 			bx,by=actor_bodies[mainplayer]:getPosition()
 			vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 			actor_bodies[mainplayer]:applyLinearImpulse ( 1,0,bx,by )
+			
+			anchor2:setParent ( actor_sprites[mainplayer] )
 	
 			end
 		end
@@ -2176,7 +2182,7 @@ fitter:insertAnchor ( anchor2 )
 add_actor(-5,-5,1,1,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
 add_actor(-8,-5,2,2,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000)
 add_actor(0,-5,1.5,1.5,0.5,0.3,0.2,"Player3","","Dynamic","face_circle_tiled4.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(2,-5,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
+add_actor(2,-5,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled5.png",particletexture1,smokeparticletexture1,"False",2000)
 
 -- add a load of boxes
 for x=1,10,2 do 
