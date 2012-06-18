@@ -2162,6 +2162,9 @@ anchor2:setParent ( actor_sprites[mainplayer] )
 fitter:insertAnchor ( anchor2 )	
 
 add_actor(-5,-5,2,2,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
+add_actor(-8,-5,2,2,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000)
+add_actor(0,-5,2,2,0.5,0.3,0.2,"Player3","","Dynamic","face_circle_tiled4.png",particletexture1,smokeparticletexture1,"False",2000)
+add_actor(2,-5,2,2,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
 
 --add wall
 add_actor(-20,0,1,50,0.02,0.3,0,"Wall","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
@@ -2176,6 +2179,13 @@ add_actor(0,-3,5,0.5,0.02,0.3,0,"Platform","","Static","platform1.png",particlet
 
 add_actor(5,-1,5,0.5,0.02,0.3,0,"Platform","","Static","platform1.png",particletexture1,smokeparticletexture1,"False",10000000)
 
+
+-- add a load of boxes
+for x=1,10,2 do 
+for y=1,10,2 do 
+add_actor(5+x,y,x/5,y/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",100,10)
+end
+end
 
 
 --[[
