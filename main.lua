@@ -104,7 +104,7 @@ layer_hud:setViewport ( viewport2 )
 alert_layer:setViewport ( viewport2 )
 
 --INIT GLOBAL VARIABLES 
-debug=false
+debug=false -- turn debug draw on/off
 
 partition = MOAIPartition.new ()
 layer_hud:setPartition ( partition )
@@ -2149,22 +2149,9 @@ function loadlevel(level)
 setupRotationSensor()
 
 --drawHills(hillStartX,hillStartY,numberOfHills,pixelStep,hillOffsetY,hillHeight)
-
 --drawHills(-20,0,2,10,-5,256)
 
 --add_actor(x,y,width,height,density,friction,restitution,actorname,treasure,bodytype,texture_image,particle_texture,smoke_texture,welded,health,points)
-
-
---add some player objects
-add_actor(-2,-5,0.75,0.75,0.5,0.3,0.2,"Player5","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
-mainplayer=c-1
-anchor2:setParent ( actor_sprites[mainplayer] )
-fitter:insertAnchor ( anchor2 )	
-
-add_actor(-5,-5,2,2,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(-8,-5,2,2,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(0,-5,2,2,0.5,0.3,0.2,"Player3","","Dynamic","face_circle_tiled4.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(2,-5,2,2,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
 
 --add wall
 add_actor(-20,0,1,50,0.02,0.3,0,"Wall","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
@@ -2179,6 +2166,17 @@ add_actor(0,-3,5,0.5,0.02,0.3,0,"Platform","","Static","platform1.png",particlet
 
 add_actor(5,-1,5,0.5,0.02,0.3,0,"Platform","","Static","platform1.png",particletexture1,smokeparticletexture1,"False",10000000)
 
+
+--add some player objects
+add_actor(-2,-5,0.75,0.75,0.5,0.3,0.2,"Player5","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
+mainplayer=c-1
+anchor2:setParent ( actor_sprites[mainplayer] )
+fitter:insertAnchor ( anchor2 )	
+
+add_actor(-5,-5,1,1,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
+add_actor(-8,-5,2,2,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000)
+add_actor(0,-5,1.5,1.5,0.5,0.3,0.2,"Player3","","Dynamic","face_circle_tiled4.png",particletexture1,smokeparticletexture1,"False",2000)
+add_actor(2,-5,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
 
 -- add a load of boxes
 for x=1,10,2 do 
