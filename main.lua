@@ -104,7 +104,7 @@ function init()
 	alert_layer:setViewport ( viewport2 )
 
 	--INIT GLOBAL VARIABLES
-	debug=false -- turn debug draw on/off
+	debug=true -- turn debug draw on/off
 
 	partition = MOAIPartition.new ()
 	layer_hud:setPartition ( partition )
@@ -586,9 +586,8 @@ if down then
 			start_level(1)
 		end
 		if pick.name=="button_level2" then
-			--layer_menu:clear()
-			--start_level(2)
-			--print "LEVEL2"
+			layer_menu:clear()
+			start_level(2)
 		end
 	end
 end
@@ -1697,7 +1696,6 @@ if down==false then
 				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
 			end
 			actor_joints[currentplayer]:destroy()
-			actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
 
 			actor_bodies[currentplayer]:setAwake()
 			actor_sprites[currentplayer]:setIndex(2)
@@ -1716,7 +1714,7 @@ if down==false then
 				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
 			end
 
-			actor_bodies[currentplayer]:setLinearVelocity(5,20)
+			print ("Clicked!")
 
 			actor_bodies[currentplayer]:setAwake()
 			actor_sprites[currentplayer]:setIndex(2)
@@ -1735,7 +1733,7 @@ if down==false then
 				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
 			end
 
-			--actor_bodies[currentplayer]:setLinearVelocity(5,20)
+			actor_bodies[currentplayer]:setLinearVelocity(5,20)
 
 			bx,by=actor_bodies[currentplayer]:getPosition()
 			confetti(bx,by,particletexture5,1,1)
@@ -1745,25 +1743,6 @@ if down==false then
 			anchor2:setParent ( actor_sprites[currentplayer] )
 			fitter:insertAnchor ( anchor2 )
 			--fitter:removeAnchor(anchor)
-		end
-
-		if (actor_fixtures[currentplayer].name=="Player5") then
-			actor_bodies[currentplayer]:setLinearVelocity(5,0)
-		end
-
-		if (actor_fixtures[currentplayer].name=="Player4") then
-
-			bx,by=actor_bodies[currentplayer]:getPosition()
-
-			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
-				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
-				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
-			end
-
-			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
-				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
-			end
 		end
 
 		if actor_fixtures[currentplayer].name=="Player" then
@@ -2154,60 +2133,56 @@ function loadlevel(level)
 
 setupRotationSensor()
 
---drawHills(hillStartX,hillStartY,numberOfHills,pixelStep,hillOffsetY,hillHeight)
---drawHills(-20,0,2,10,-5,256)
+ 
 
---add_actor(x,y,width,height,density,friction,restitution,actorname,treasure,bodytype,texture_image,particle_texture,smoke_texture,welded,health,points)
+if level==1 then
 
---add wall
-add_actor(-20,0,1,50,0.02,0.3,0,"Wall","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
---add wall
-add_actor(40,0,1,50,0.02,0.3,0,"Wall","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
+ --background layer
+        layer_back:setParallax ( 0.5,1 )
+        sprite_background_far:setLoc(2,2)
+        layer_back:insertProp ( sprite_background_far)
+        layer_med:setParallax ( 0.75,1 )
+        sprite_background_med:setLoc(0,-2.5)
+        layer_med:insertProp ( sprite_background_med)
+        sprite_background_med1:setLoc(10,-2.5)
+        layer_med:insertProp ( sprite_background_med1)
+        sprite_background_med2:setLoc(20,-2.5)
+        layer_med:insertProp ( sprite_background_med2)
+        layer_close:setParallax ( 0.95,1 )
+        sprite_background_close:setLoc(10,0)
+        layer_close:insertProp ( sprite_background_close)
 
---add ground
-add_actor(0,-10,90,5,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
-
--- add platform
-add_actor(0,-3,5,0.5,0.02,0.3,0,"Platform","","Static","platform1.png",particletexture1,smokeparticletexture1,"False",10000000)
-
-add_actor(5,-1,5,0.5,0.02,0.3,0,"Platform","","Static","platform1.png",particletexture1,smokeparticletexture1,"False",10000000)
-
-
---add some player objects
-add_actor(-2,-5,0.75,0.75,0.5,0.3,0.2,"Player5","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
-mainplayer=c-1
-anchor2:setParent ( actor_sprites[mainplayer] )
-fitter:insertAnchor ( anchor2 )
-
-add_actor(-5,-5,1,1,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(-8,-5,2,2,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(0,-5,1.5,1.5,0.5,0.3,0.2,"Player3","","Dynamic","face_circle_tiled4.png",particletexture1,smokeparticletexture1,"False",2000)
-add_actor(2,-5,1.2,1.2,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled5.png",particletexture1,smokeparticletexture1,"False",2000)
-
--- add a load of boxes
-for x=1,10,2 do
-	for y=1,10,2 do
-		add_actor(5+x,y,x/5,y/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",100,10)
-	end
-end
-
--- add a load of boxes
-for x=1,10,2 do
-	for y=1,10,2 do
-		add_actor(5+x,y,x/5,y/5,0.5,0.5,0.1,"Box","","Dynamic","face_box_tiled2.png",particletexture1,smokeparticletexture2,"False",500,10)
-	end
-end
-
---add some treasure
-add_actor(0,5,1,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled1.png",particletexture5,smokeparticletexture1,"False",1,10000)
-add_actor(5,5,4,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled2.png",particletexture5,smokeparticletexture1,"False",1,10000)
-add_actor(8,5,1,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled3.png",particletexture5,smokeparticletexture1,"False",1,10000)
-add_actor(9,5,1,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled4.png",particletexture5,smokeparticletexture1,"False",1,10000)
-
+        --add ground
+        add_actor(0,-10,90,5,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
+        add_actor(5,-10,10,15,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
+       
+        --add some player objects
+        add_actor(-2,-5,0.75,0.75,0.5,0.3,0.2,"Player1","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"True",2000)
+        mainplayer=c-1
+     
+        --add some treasure
+        add_actor(-5,-4,1,1,0.5,0.3,0.4,"Treasure","","Dynamic","treasure_box_tiled1.png",particletexture5,smokeparticletexture1,"True",10,1000)
+        fitter:insertAnchor ( anchor ) -- add camera anchor    
 
 end
 
-function start_level()
+if level==2 then
+
+        --background layer
+        --add ground
+        add_actor(0,-10,90,5,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
+        --add Hills
+        drawHills(-20,0,2,10,-5,256)
+
+        --add some player objects
+        add_actor(-2,-5,0.75,0.75,0.5,0.3,0.2,"Player3","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
+        mainplayer=c-1
+        anchor2:setParent ( actor_sprites[mainplayer] )
+        fitter:insertAnchor ( anchor2 )
+end
+end
+
+function start_level(currentlevel)
 
 c=0
 score=0
@@ -2320,7 +2295,7 @@ layer_particles:setCamera ( camera )
 layer_splash:setCamera ( camera )
 
 -- load actors
-loadlevel(1)
+loadlevel(currentlevel)
 point_to_game()
 
 end
