@@ -271,7 +271,7 @@ function loadresources()
 	button_level4.name = "button_level4"
 
 	gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( assetdirectory.."button9.png" )
+	gfxQuad:setTexture ( assetdirectory.."button1.png" )
 	gfxQuad:setRect ( -32,-32,32,32)
 	button_game_exit = MOAIProp2D.new ()
 	button_game_exit:setDeck ( gfxQuad )
@@ -2293,6 +2293,12 @@ if level==2 then
 				add_actor(x-2,y,x/5,x/5,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled3.png",particletexture2,smokeparticletexture2,"False",800,10)
 			end
 		end
+		-- add a load of boxes
+		for x=1,3,1 do 
+			for y=1,3,1 do 
+				add_actor(x-5,y-5,x/5,x/5,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled3.png",particletexture3,smokeparticletexture3,"True",80,10)
+			end
+		end
 
 end
 
@@ -2323,11 +2329,9 @@ if level==3 then
 		-- add a load of boxes
 		for x=1,3,1 do 
 			for y=1,3,1 do 
-				add_actor(x-2,y,x/5,x/5,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled3.png",particletexture2,smokeparticletexture2,"False",80,10)
+				add_actor(x-2,y,x/5,x/5,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled2.png",particletexture2,smokeparticletexture2,"False",80,10)
 			end
 		end
-
-
 
 end
 if level==4 then
