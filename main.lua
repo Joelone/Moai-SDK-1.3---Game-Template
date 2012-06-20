@@ -255,6 +255,13 @@ function loadresources()
 	button_level2 = MOAIProp2D.new ()
 	button_level2:setDeck ( gfxQuad )
 	button_level2.name = "button_level2"
+	
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button8.png" )
+	gfxQuad:setRect ( -1,-1,1,1 )
+	button_level3 = MOAIProp2D.new ()
+	button_level3:setDeck ( gfxQuad )
+	button_level3.name = "button_level3"
 
 	gfxQuad = MOAIGfxQuad2D.new ()
 	gfxQuad:setTexture ( assetdirectory.."button9.png" )
@@ -269,6 +276,13 @@ function loadresources()
 	button_game_jump= MOAIProp2D.new ()
 	button_game_jump:setDeck ( gfxQuad )
 	button_game_jump.name = "button_game_jump"
+	
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button9.png" )
+	gfxQuad:setRect ( -32,-32,32,32)
+	button_game_down= MOAIProp2D.new ()
+	button_game_down:setDeck ( gfxQuad )
+	button_game_down.name = "button_game_down"
 
 
 	gfxQuad = MOAIGfxQuad2D.new ()
@@ -589,6 +603,11 @@ if down then
 			layer_menu:clear()
 			start_level(2)
 		end
+		
+		if pick.name=="button_level3" then
+			layer_menu:clear()
+			start_level(3)
+		end
 	end
 end
 
@@ -612,7 +631,11 @@ button_level:setLoc(3,-3)
 
 partition_menu:insertProp ( button_level2 )
 layer_menu:insertProp ( button_level2)
-button_level2:setLoc(0,2)
+button_level2:setLoc(0,-2)
+
+partition_menu:insertProp ( button_level3 )
+layer_menu:insertProp ( button_level3)
+button_level2:setLoc(3,2)
 
 MOAISim.pushRenderPass ( layer_menu )
 
@@ -1615,6 +1638,16 @@ if down==true then
 			anchor2:setParent ( actor_sprites[mainplayer] )
 
 		end
+		
+		if pick.name=="button_game_down" then
+			cx,cy=camera:getLoc()
+			bx,by=actor_bodies[mainplayer]:getPosition()
+			vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
+			actor_bodies[mainplayer]:applyLinearImpulse ( 0,-2,bx,by )
+
+			anchor2:setParent ( actor_sprites[mainplayer] )
+
+		end
 
 		if pick.name=="button_game_left" then
 			cx,cy=camera:getLoc()
@@ -1744,6 +1777,21 @@ if down==false then
 			fitter:insertAnchor ( anchor2 )
 			--fitter:removeAnchor(anchor)
 		end
+		
+				if (actor_fixtures[currentplayer].name=="Player4") then
+
+			bx,by=actor_bodies[currentplayer]:getPosition()
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
+				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player1","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
+			end
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
+				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player1","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
+			end
+		end
 
 		if actor_fixtures[currentplayer].name=="Player" then
 			actor_bodies[currentplayer]:setAwake()
@@ -1870,7 +1918,7 @@ if event == MOAIBox2DArbiter.BEGIN then
 	if fixtureA.name and fixtureB.name then
 		----print( fixtureA.userdata.." "..fixtureA.name.." collided with " .. fixtureB.userdata.." "..fixtureB.name)
 
-		if ((fixtureB.name=="Box" or fixtureB.name=="Triangle" or fixtureB.name=="Circle" or fixtureB.name=="Wall") and (fixtureA.name=="Player" or fixtureA.name=="Player1" or fixtureA.name=="Player2" or fixtureA.name=="Player3")) or
+		if ((fixtureB.name=="Box" or fixtureB.name=="Triangle" or fixtureB.name=="Circle" or fixtureB.name=="Wall") and (fixtureA.name=="Player" or fixtureA.name=="Player1" or fixtureA.name=="Player2" or fixtureA.name=="Player3" or fixtureA.name=="Player4")) or
 		((fixtureB.name=="Box" or fixtureB.name=="Triangle"  or fixtureB.name=="Circle") and (fixtureA.name=="Box" or fixtureA.name=="Triangle" or fixtureA.name=="Circle" or fixtureA.name=="Wall"))
 		then
 			collisionx,collisiony= fixtureB:getBody():getWorldCenter()
@@ -2194,6 +2242,37 @@ if level==2 then
 		end
 
 end
+
+if level==3 then
+
+		world:setGravity ( 0, 0)
+
+        --add some player objects
+        add_actor(-2,-5,1.5,1.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
+        mainplayer=c-1
+        anchor2:setParent ( actor_sprites[mainplayer] )
+        fitter:insertAnchor ( anchor2 )
+		
+		-- add a load of boxes
+		for x=1,3,1 do 
+			for y=1,3,1 do 
+				add_actor(x,y,x/5,x/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",50,10)
+			end
+		end
+		-- add a load of boxes
+		for x=1,3,1 do 
+			for y=1,3,1 do 
+				add_actor(x-2,y,x/5,x/5,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled3.png",particletexture2,smokeparticletexture2,"False",80,10)
+			end
+		end
+		
+		--add walls
+        add_actor(0,-10,90,5,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
+        add_actor(0,10,90,5,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)	
+		add_actor(-10,0,5,90,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)	
+		add_actor(10,0,5,90,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)	
+
+end
 end
 
 function start_level(currentlevel)
@@ -2216,27 +2295,6 @@ gamepartition = MOAIPartition.new ()
 layer:setPartition ( gamepartition )
 
 
---background layer
-
---
-layer_back:setParallax ( 0.5,1 )
-sprite_background_far:setLoc(2,2)
-layer_back:insertProp ( sprite_background_far)
-
-layer_med:setParallax ( 0.75,1 )
-sprite_background_med:setLoc(0,-2.5)
-layer_med:insertProp ( sprite_background_med)
-sprite_background_med1:setLoc(10,-2.5)
-layer_med:insertProp ( sprite_background_med1)
-sprite_background_med2:setLoc(20,-2.5)
-layer_med:insertProp ( sprite_background_med2)
-
-layer_close:setParallax ( 0.95,1 )
-sprite_background_close:setLoc(10,0)
-layer_close:insertProp ( sprite_background_close)
-
-
-
 --]]
 
 
@@ -2246,8 +2304,12 @@ layer_close:insertProp ( sprite_background_close)
 button_game_exit:setLoc(196,screen_height/2*-1+35)
 layer_hud:insertProp ( button_game_exit )
 
-button_game_jump:setLoc(0,screen_height/2*-1+35)
+button_game_down:setLoc(0,screen_height/2*-1+35)
+layer_hud:insertProp ( button_game_down )
+
+button_game_jump:setLoc(0,screen_height/2*-1+90)
 layer_hud:insertProp ( button_game_jump )
+
 button_game_right:setLoc(100,screen_height/2*-1+35)
 layer_hud:insertProp ( button_game_right)
 button_game_left:setLoc(-100,screen_height/2*-1+35)
