@@ -1784,12 +1784,12 @@ if down==false then
 
 			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
 				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
-				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player1","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
+				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
 			end
 
 			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
 				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player1","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
+				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
 			end
 		end
 
