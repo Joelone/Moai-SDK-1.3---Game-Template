@@ -1,532 +1,532 @@
 -- INITIALISATION --
 function init()
 
-screen_width=MOAIEnvironment.screenWidth
-screen_height=MOAIEnvironment.screenHeight
+	screen_width=MOAIEnvironment.screenWidth
+	screen_height=MOAIEnvironment.screenHeight
 
-adirectory=MOAIEnvironment.documentDirectory
-osbrand=MOAIEnvironment.osBrand
+	adirectory=MOAIEnvironment.documentDirectory
+	osbrand=MOAIEnvironment.osBrand
 
-if osbrand==nil then osbrand='None' end
+	if osbrand==nil then osbrand='None' end
 
-print ("osbrand="..osbrand)
+	print ("osbrand="..osbrand)
 
-if screen_width==nil then screen_width=800 end
-if screen_height==nil then screen_height=480 end
+	if screen_width==nil then screen_width=800 end
+	if screen_height==nil then screen_height=480 end
 
-if adirectory==nil then
-assetdirectory=''
-end
-if adirectory~=nil then
-assetdirectory=adirectory..'/'
-end
+	if adirectory==nil then
+		assetdirectory=''
+	end
+	if adirectory~=nil then
+		assetdirectory=adirectory..'/'
+	end
 
---[[
-screen_width=800
-screen_height=480
---]]
-
-
-MOAISim.openWindow ( "test", screen_width, screen_height )
-
-local color = MOAIColor.new()
-color:setColor(21/255, 214/255, 249/255, 1)
-MOAIGfxDevice.setClearColor(color)
-
---[[
-MOAISim.setStep ( 1 / 60 )
-MOAISim.clearLoopFlags ()
-MOAISim.setLoopFlags ( MOAISim.LOOP_FLAGS_FIXED )
-MOAISim.setLoopFlags ( MOAISim.SIM_LOOP_ALLOW_BOOST )
-MOAISim.setLoopFlags ( MOAISim.SIM_LOOP_LONG_DELAY )
-MOAISim.setBoostThreshold ( 0 )
---]]
-
---]]
-
--- setup all layers
-layer_back = MOAILayer2D.new ()
-layer_med=MOAILayer2D.new ()
-layer_close=MOAILayer2D.new ()
-layer= MOAILayer2D.new ()
-layer_particles= MOAILayer2D.new ()
-layer_menu=MOAILayer2D.new()
-layer_hud = MOAILayer2D.new ()
-layer_splash = MOAILayer2D.new () 
-alert_layer = MOAILayer2D.new ()
-
-MOAISim.pushRenderPass ( layer_back )
-MOAISim.pushRenderPass ( layer_med )
-MOAISim.pushRenderPass ( layer_close )
-MOAISim.pushRenderPass ( layer )
-MOAISim.pushRenderPass ( layer_hud )
-MOAISim.pushRenderPass ( alert_layer )
-MOAISim.pushRenderPass ( layer_menu )
-MOAISim.pushRenderPass ( layer_particles )
-MOAISim.pushRenderPass ( layer_splash )
-
-camera=MOAICamera.new ()
-
-partition_menu = MOAIPartition.new ()
-layer_menu:setPartition ( partition_menu)
-
-viewport = MOAIViewport.new ()
-viewport:setSize ( screen_width,screen_height )
-scale=16
-viewport:setScale ( scale,0)
-
-viewport2 = MOAIViewport.new ()
-viewport2:setSize ( screen_width,screen_height )
-viewport2:setScale ( screen_width,screen_height)
-
---[[
-if (osbrand=='iOS') then
-viewport:setRotation(90)
-viewport2:setRotation(90)
-o_screen_width=screen_width
-o_screen_height=screen_height
-screen_width=screen_height
-screen_height=o_screen_width
-end
---]]
+	--[[
+	screen_width=800
+	screen_height=480
+	--]]
 
 
+	MOAISim.openWindow ( "test", screen_width, screen_height )
 
---print("sh="..screen_height)
+	local color = MOAIColor.new()
+	color:setColor(21/255, 214/255, 249/255, 1)
+	MOAIGfxDevice.setClearColor(color)
 
-layer_back:setViewport ( viewport )
-layer_med:setViewport ( viewport )
-layer_close:setViewport ( viewport )
-layer_particles:setViewport ( viewport )
-layer:setViewport ( viewport )
-layer_splash:setViewport ( viewport )
-layer_hud:setViewport ( viewport2 )
-alert_layer:setViewport ( viewport2 )
+	--[[
+	MOAISim.setStep ( 1 / 60 )
+	MOAISim.clearLoopFlags ()
+	MOAISim.setLoopFlags ( MOAISim.LOOP_FLAGS_FIXED )
+	MOAISim.setLoopFlags ( MOAISim.SIM_LOOP_ALLOW_BOOST )
+	MOAISim.setLoopFlags ( MOAISim.SIM_LOOP_LONG_DELAY )
+	MOAISim.setBoostThreshold ( 0 )
+	--]]
 
---INIT GLOBAL VARIABLES 
-debug=false -- turn debug draw on/off
+	--]]
 
-partition = MOAIPartition.new ()
-layer_hud:setPartition ( partition )
+	-- setup all layers
+	layer_back = MOAILayer2D.new ()
+	layer_med=MOAILayer2D.new ()
+	layer_close=MOAILayer2D.new ()
+	layer= MOAILayer2D.new ()
+	layer_particles= MOAILayer2D.new ()
+	layer_menu=MOAILayer2D.new()
+	layer_hud = MOAILayer2D.new ()
+	layer_splash = MOAILayer2D.new ()
+	alert_layer = MOAILayer2D.new ()
 
-actor_fixtures = {}
-actor_bodies = {}
-actor_joints = {}
-actor_sprites = {}
+	MOAISim.pushRenderPass ( layer_back )
+	MOAISim.pushRenderPass ( layer_med )
+	MOAISim.pushRenderPass ( layer_close )
+	MOAISim.pushRenderPass ( layer )
+	MOAISim.pushRenderPass ( layer_hud )
+	MOAISim.pushRenderPass ( alert_layer )
+	MOAISim.pushRenderPass ( layer_menu )
+	MOAISim.pushRenderPass ( layer_particles )
+	MOAISim.pushRenderPass ( layer_splash )
 
-mousedown=false
-gridon=true
-destroyed=0
-c=0
-mainplayer=0
-mainxoffset=0
+	camera=MOAICamera.new ()
 
-width=0.1
-maximumwidth=2
-game_width=40
-boundaryright=game_width
-boundaryleft=game_width*-1
-boundarytop=screen_height*2/scale
-boundarybottom=screen_height*-1/scale
-boundarybottom=-10
-camerapropy=-5
+	partition_menu = MOAIPartition.new ()
+	layer_menu:setPartition ( partition_menu)
 
-popscorebox = {}
-popscorebox_counter=0
+	viewport = MOAIViewport.new ()
+	viewport:setSize ( screen_width,screen_height )
+	scale=16
+	viewport:setScale ( scale,0)
+
+	viewport2 = MOAIViewport.new ()
+	viewport2:setSize ( screen_width,screen_height )
+	viewport2:setScale ( screen_width,screen_height)
+
+	--[[
+	if (osbrand=='iOS') then
+		viewport:setRotation(90)
+		viewport2:setRotation(90)
+		o_screen_width=screen_width
+		o_screen_height=screen_height
+		screen_width=screen_height
+		screen_height=o_screen_width
+	end
+	--]]
 
 
-usecamerabody=false
-zoomscale=10
-maxzoomscale=40
-minzoomscale=5
 
-treasure=0
-treasurex=0
-treasurey=0
-tick=0
-myx=0
-myy=0
-lastpicked=0
-eventcount=1
-camerax_target=0
-cameray_target=0
-mode=0
-score=0
-lastX=0
-lastY=0
-oldX=0
-oldY=0
-oldmouseX=0
-oldmouseY=0
-mouseX=0
-mouseY=0
-xFling=0
-yFling=0
-mouseXdown=0
-mouseYdown=0
-xDown=0
-yDown=0
-xLast=0
-yLast=0
-xMove=0
-yMove=0
-xUp=0
-yUp=0
-start_width=0
-start_height=0
-x=0
-y=0
-pinching=false
-pointer1x=0
-pointer2x=0
-pointer1y=0
-pointer2y=0
-soundon=false
-timerDown=0
-trackplayer=false
-mouseuptimer=0
-mousedowntimer=0
+	--print("sh="..screen_height)
+
+	layer_back:setViewport ( viewport )
+	layer_med:setViewport ( viewport )
+	layer_close:setViewport ( viewport )
+	layer_particles:setViewport ( viewport )
+	layer:setViewport ( viewport )
+	layer_splash:setViewport ( viewport )
+	layer_hud:setViewport ( viewport2 )
+	alert_layer:setViewport ( viewport2 )
+
+	--INIT GLOBAL VARIABLES
+	debug=false -- turn debug draw on/off
+
+	partition = MOAIPartition.new ()
+	layer_hud:setPartition ( partition )
+
+	actor_fixtures = {}
+	actor_bodies = {}
+	actor_joints = {}
+	actor_sprites = {}
+
+	mousedown=false
+	gridon=true
+	destroyed=0
+	c=0
+	mainplayer=0
+	mainxoffset=0
+
+	width=0.1
+	maximumwidth=2
+	game_width=40
+	boundaryright=game_width
+	boundaryleft=game_width*-1
+	boundarytop=screen_height*2/scale
+	boundarybottom=screen_height*-1/scale
+	boundarybottom=-10
+	camerapropy=-5
+
+	popscorebox = {}
+	popscorebox_counter=0
+
+
+	usecamerabody=false
+	zoomscale=10
+	maxzoomscale=40
+	minzoomscale=5
+
+	treasure=0
+	treasurex=0
+	treasurey=0
+	tick=0
+	myx=0
+	myy=0
+	lastpicked=0
+	eventcount=1
+	camerax_target=0
+	cameray_target=0
+	mode=0
+	score=0
+	lastX=0
+	lastY=0
+	oldX=0
+	oldY=0
+	oldmouseX=0
+	oldmouseY=0
+	mouseX=0
+	mouseY=0
+	xFling=0
+	yFling=0
+	mouseXdown=0
+	mouseYdown=0
+	xDown=0
+	yDown=0
+	xLast=0
+	yLast=0
+	xMove=0
+	yMove=0
+	xUp=0
+	yUp=0
+	start_width=0
+	start_height=0
+	x=0
+	y=0
+	pinching=false
+	pointer1x=0
+	pointer2x=0
+	pointer1y=0
+	pointer2y=0
+	soundon=false
+	timerDown=0
+	trackplayer=false
+	mouseuptimer=0
+	mousedowntimer=0
 end
 
 function loadresources()
---LOAD GLOBAL RESOURCES
+	--LOAD GLOBAL RESOURCES
 
 
 
-logoGfx = MOAIGfxQuad2D.new ()
-logoGfx:setTexture ( assetdirectory.."map.png" )
-logoGfx:setRect ( -8,-5,8,5)
-map = MOAIProp2D.new ()
-map:setDeck ( logoGfx )
+	logoGfx = MOAIGfxQuad2D.new ()
+	logoGfx:setTexture ( assetdirectory.."map.png" )
+	logoGfx:setRect ( -8,-5,8,5)
+	map = MOAIProp2D.new ()
+	map:setDeck ( logoGfx )
 
-update_loading(1)
+	update_loading(1)
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."arrow.png" )
-gfxQuad:setRect ( -1,-1,1,1 )
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."arrow.png" )
+	gfxQuad:setRect ( -1,-1,1,1 )
 
-arrow = MOAIProp2D.new ()
-arrow:setDeck ( gfxQuad )
-arrow.name = "arrow" 
+	arrow = MOAIProp2D.new ()
+	arrow:setDeck ( gfxQuad )
+	arrow.name = "arrow"
 
-update_loading(5)
+	update_loading(5)
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button4.png" )
-gfxQuad:setRect ( -1,-1,1,1 )
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button4.png" )
+	gfxQuad:setRect ( -1,-1,1,1 )
 
-button_close = MOAIProp2D.new ()
-button_close:setDeck ( gfxQuad )
-button_close.name = "button_close" 
+	button_close = MOAIProp2D.new ()
+	button_close:setDeck ( gfxQuad )
+	button_close.name = "button_close"
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button2.png" )
-gfxQuad:setRect ( -1,-1,1,1 )
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button2.png" )
+	gfxQuad:setRect ( -1,-1,1,1 )
 
-button_start = MOAIProp2D.new ()
-button_start:setDeck ( gfxQuad )
-button_start.name = "button_start" 
+	button_start = MOAIProp2D.new ()
+	button_start:setDeck ( gfxQuad )
+	button_start.name = "button_start"
 
-gfxQuad = MOAITileDeck2D.new ()
-gfxQuad:setTexture ( assetdirectory.."sound.png" )
-gfxQuad:setRect ( -1,-1,1,1)
-gfxQuad:setSize ( 2,1 )
-button_sound = MOAIProp2D.new ()
-button_sound:setDeck ( gfxQuad )
-button_sound.name = "button_sound" 
+	gfxQuad = MOAITileDeck2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."sound.png" )
+	gfxQuad:setRect ( -1,-1,1,1)
+	gfxQuad:setSize ( 2,1 )
+	button_sound = MOAIProp2D.new ()
+	button_sound:setDeck ( gfxQuad )
+	button_sound.name = "button_sound"
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button5.png" )
-gfxQuad:setRect ( -1,-1,1,1 )
-button_level_exit = MOAIProp2D.new ()
-button_level_exit:setDeck ( gfxQuad )
-button_level_exit.name = "button_level_exit" 
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button5.png" )
+	gfxQuad:setRect ( -1,-1,1,1 )
+	button_level_exit = MOAIProp2D.new ()
+	button_level_exit:setDeck ( gfxQuad )
+	button_level_exit.name = "button_level_exit"
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button6.png" )
-gfxQuad:setRect ( -1,-1,1,1 )
-button_level = MOAIProp2D.new ()
-button_level:setDeck ( gfxQuad )
-button_level.name = "button_level" 
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button6.png" )
+	gfxQuad:setRect ( -1,-1,1,1 )
+	button_level = MOAIProp2D.new ()
+	button_level:setDeck ( gfxQuad )
+	button_level.name = "button_level"
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button6.png" )
-gfxQuad:setRect ( -1,-1,1,1 )
-button_level2 = MOAIProp2D.new ()
-button_level2:setDeck ( gfxQuad )
-button_level2.name = "button_level2" 
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button6.png" )
+	gfxQuad:setRect ( -1,-1,1,1 )
+	button_level2 = MOAIProp2D.new ()
+	button_level2:setDeck ( gfxQuad )
+	button_level2.name = "button_level2"
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button9.png" )
-gfxQuad:setRect ( -32,-32,32,32)
-button_game_exit = MOAIProp2D.new ()
-button_game_exit:setDeck ( gfxQuad )
-button_game_exit.name = "button_game_exit" 
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button9.png" )
+	gfxQuad:setRect ( -32,-32,32,32)
+	button_game_exit = MOAIProp2D.new ()
+	button_game_exit:setDeck ( gfxQuad )
+	button_game_exit.name = "button_game_exit"
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button2.png" )
-gfxQuad:setRect ( -32,-32,32,32)
-button_game_jump= MOAIProp2D.new ()
-button_game_jump:setDeck ( gfxQuad )
-button_game_jump.name = "button_game_jump" 
-
-
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button3.png" )
-gfxQuad:setRect ( -32,-32,32,32)
-button_game_right= MOAIProp2D.new ()
-button_game_right:setDeck ( gfxQuad )
-button_game_right.name = "button_game_right" 
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button2.png" )
+	gfxQuad:setRect ( -32,-32,32,32)
+	button_game_jump= MOAIProp2D.new ()
+	button_game_jump:setDeck ( gfxQuad )
+	button_game_jump.name = "button_game_jump"
 
 
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."button4.png" )
-gfxQuad:setRect ( -32,-32,32,32)
-button_game_left= MOAIProp2D.new ()
-button_game_left:setDeck ( gfxQuad )
-button_game_left.name = "button_game_left" 
-
---
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."background_far.png" )
-gfxQuad:setRect ( -35,-10,35,10)
-sprite_background_far = MOAIProp2D.new ()
-sprite_background_far:setDeck ( gfxQuad )
-
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."background_med.png" )
-gfxQuad:setRect ( -5,-5,5,5)
-sprite_background_med = MOAIProp2D.new ()
-sprite_background_med:setDeck ( gfxQuad )
-
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."background_med.png" )
-gfxQuad:setRect ( -5,-5,5,5)
-sprite_background_med1 = MOAIProp2D.new ()
-sprite_background_med1:setDeck ( gfxQuad )
-
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."background_med.png" )
-gfxQuad:setRect ( -5,-5,5,5)
-sprite_background_med2 = MOAIProp2D.new ()
-sprite_background_med2:setDeck ( gfxQuad )
-
-gfxQuad = MOAIGfxQuad2D.new ()
-gfxQuad:setTexture ( assetdirectory.."background_close.png" )
-gfxQuad:setRect ( -20,-7.5,20,7.5)
-sprite_background_close = MOAIProp2D.new ()
-sprite_background_close:setDeck ( gfxQuad )
---]]
-
-update_loading(50)
-
--- Particles
-
-particletexture1 = MOAIGfxQuad2D.new ()
-particletexture1:setTexture ( assetdirectory..'particle1.png' )
-particletexture1:setRect ( -0.8, -0.8, 0.8, 0.8)
-
-particletexture2= MOAIGfxQuad2D.new ()
-particletexture2:setTexture ( assetdirectory..'particle2.png' )
-particletexture2:setRect ( -1,-1,1,1)
-
-particletexture3= MOAIGfxQuad2D.new ()
-particletexture3:setTexture ( assetdirectory..'particle3.png' )
-particletexture3:setRect ( -1,-1,1,1)
-
-particletexture4= MOAIGfxQuad2D.new ()
-particletexture4:setTexture ( assetdirectory..'particle4.png' )
-particletexture4:setRect ( -1,-1,1,1)
-
-particletexture5 = MOAIGfxQuad2D.new ()
-particletexture5:setTexture ( assetdirectory..'particle5.png' )
-particletexture5:setRect ( -0.8, -0.8, 0.8, 0.8)
-
-smokeparticletexture1 = MOAIGfxQuad2D.new ()
-smokeparticletexture1:setTexture ( assetdirectory..'smokeparticle1.png' )
-smokeparticletexture1:setRect ( -0.8, -0.8, 0.8, 0.8)
-
-smokeparticletexture2 = MOAIGfxQuad2D.new ()
-smokeparticletexture2:setTexture ( assetdirectory..'smokeparticle2.png' )
-smokeparticletexture2:setRect ( -0.8, -0.8, 0.8, 0.8)
-
-smokeparticletexture3 = MOAIGfxQuad2D.new ()
-smokeparticletexture3:setTexture ( assetdirectory..'smokeparticle3.png' )
-smokeparticletexture3:setRect ( -0.8, -0.8, 0.8, 0.8)
-
-smokeparticletexture4 = MOAIGfxQuad2D.new ()
-smokeparticletexture4:setTexture ( assetdirectory..'smokeparticle4.png' )
-smokeparticletexture4:setRect ( -0.8, -0.8, 0.8, 0.8)
-
-confettitexture1 = MOAIGfxQuad2D.new ()
-confettitexture1:setTexture ( assetdirectory..'particle1.png' )
-confettitexture1:setRect ( -0.8, -0.8, 0.8, 0.8)
-
-loadingbar = MOAIGfxQuad2D.new ()
-loadingbar:setTexture ( assetdirectory.."loading.png" )
-
-loadingbar:setUVRect ( 0, 0, 1, 1 )
-loading = MOAIProp2D.new ()
-loading:setDeck ( loadingbar )
-
-loadingbar:setRect ( 0,-0.5,width,0.5 )
-
--- Text boxes
-charcodes = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,:;!?()&/-'
-
-font = MOAIFont.new ()
-font:loadFromTTF ( assetdirectory..'arial.TTF', charcodes, 10, 163 )
-
-font2 = MOAIFont.new ()
-font2:loadFromTTF ( assetdirectory..'arial.TTF', charcodes, 8, 163 )
-
-bigfont = MOAIFont.new ()
-bigfont:loadFromTTF ( assetdirectory..'arial.TTF', charcodes, 20, 163 )
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button3.png" )
+	gfxQuad:setRect ( -32,-32,32,32)
+	button_game_right= MOAIProp2D.new ()
+	button_game_right:setDeck ( gfxQuad )
+	button_game_right.name = "button_game_right"
 
 
-scorebox_shadow = MOAITextBox.new ()
-scorebox = MOAITextBox.new ()
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."button4.png" )
+	gfxQuad:setRect ( -32,-32,32,32)
+	button_game_left= MOAIProp2D.new ()
+	button_game_left:setDeck ( gfxQuad )
+	button_game_left.name = "button_game_left"
+
+	--
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."background_far.png" )
+	gfxQuad:setRect ( -35,-10,35,10)
+	sprite_background_far = MOAIProp2D.new ()
+	sprite_background_far:setDeck ( gfxQuad )
+
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."background_med.png" )
+	gfxQuad:setRect ( -5,-5,5,5)
+	sprite_background_med = MOAIProp2D.new ()
+	sprite_background_med:setDeck ( gfxQuad )
+
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."background_med.png" )
+	gfxQuad:setRect ( -5,-5,5,5)
+	sprite_background_med1 = MOAIProp2D.new ()
+	sprite_background_med1:setDeck ( gfxQuad )
+
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."background_med.png" )
+	gfxQuad:setRect ( -5,-5,5,5)
+	sprite_background_med2 = MOAIProp2D.new ()
+	sprite_background_med2:setDeck ( gfxQuad )
+
+	gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( assetdirectory.."background_close.png" )
+	gfxQuad:setRect ( -20,-7.5,20,7.5)
+	sprite_background_close = MOAIProp2D.new ()
+	sprite_background_close:setDeck ( gfxQuad )
+	--]]
+
+	update_loading(50)
+
+	-- Particles
+
+	particletexture1 = MOAIGfxQuad2D.new ()
+	particletexture1:setTexture ( assetdirectory..'particle1.png' )
+	particletexture1:setRect ( -0.8, -0.8, 0.8, 0.8)
+
+	particletexture2= MOAIGfxQuad2D.new ()
+	particletexture2:setTexture ( assetdirectory..'particle2.png' )
+	particletexture2:setRect ( -1,-1,1,1)
+
+	particletexture3= MOAIGfxQuad2D.new ()
+	particletexture3:setTexture ( assetdirectory..'particle3.png' )
+	particletexture3:setRect ( -1,-1,1,1)
+
+	particletexture4= MOAIGfxQuad2D.new ()
+	particletexture4:setTexture ( assetdirectory..'particle4.png' )
+	particletexture4:setRect ( -1,-1,1,1)
+
+	particletexture5 = MOAIGfxQuad2D.new ()
+	particletexture5:setTexture ( assetdirectory..'particle5.png' )
+	particletexture5:setRect ( -0.8, -0.8, 0.8, 0.8)
+
+	smokeparticletexture1 = MOAIGfxQuad2D.new ()
+	smokeparticletexture1:setTexture ( assetdirectory..'smokeparticle1.png' )
+	smokeparticletexture1:setRect ( -0.8, -0.8, 0.8, 0.8)
+
+	smokeparticletexture2 = MOAIGfxQuad2D.new ()
+	smokeparticletexture2:setTexture ( assetdirectory..'smokeparticle2.png' )
+	smokeparticletexture2:setRect ( -0.8, -0.8, 0.8, 0.8)
+
+	smokeparticletexture3 = MOAIGfxQuad2D.new ()
+	smokeparticletexture3:setTexture ( assetdirectory..'smokeparticle3.png' )
+	smokeparticletexture3:setRect ( -0.8, -0.8, 0.8, 0.8)
+
+	smokeparticletexture4 = MOAIGfxQuad2D.new ()
+	smokeparticletexture4:setTexture ( assetdirectory..'smokeparticle4.png' )
+	smokeparticletexture4:setRect ( -0.8, -0.8, 0.8, 0.8)
+
+	confettitexture1 = MOAIGfxQuad2D.new ()
+	confettitexture1:setTexture ( assetdirectory..'particle1.png' )
+	confettitexture1:setRect ( -0.8, -0.8, 0.8, 0.8)
+
+	loadingbar = MOAIGfxQuad2D.new ()
+	loadingbar:setTexture ( assetdirectory.."loading.png" )
+
+	loadingbar:setUVRect ( 0, 0, 1, 1 )
+	loading = MOAIProp2D.new ()
+	loading:setDeck ( loadingbar )
+
+	loadingbar:setRect ( 0,-0.5,width,0.5 )
+
+	-- Text boxes
+	charcodes = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,:;!?()&/-'
+
+	font = MOAIFont.new ()
+	font:loadFromTTF ( assetdirectory..'arial.TTF', charcodes, 10, 163 )
+
+	font2 = MOAIFont.new ()
+	font2:loadFromTTF ( assetdirectory..'arial.TTF', charcodes, 8, 163 )
+
+	bigfont = MOAIFont.new ()
+	bigfont:loadFromTTF ( assetdirectory..'arial.TTF', charcodes, 20, 163 )
+
+
+	scorebox_shadow = MOAITextBox.new ()
+	scorebox = MOAITextBox.new ()
 
 
 
---[[
-MOAIUntzSystem.initialize ()
-sound1 = MOAIUntzSound.new ()
-sound1:load ( assetdirectory..'pop.wav' )
-sound1:setVolume ( 1 )
-sound1:setLooping ( false )
+	--[[
+	MOAIUntzSystem.initialize ()
+	sound1 = MOAIUntzSound.new ()
+	sound1:load ( assetdirectory..'pop.wav' )
+	sound1:setVolume ( 1 )
+	sound1:setLooping ( false )
 
-sound2 = MOAIUntzSound.new ()
-sound2:load ( assetdirectory..'bounce.wav' )
-sound2:setVolume ( 1 )
-sound2:setLooping ( false )
+	sound2 = MOAIUntzSound.new ()
+	sound2:load ( assetdirectory..'bounce.wav' )
+	sound2:setVolume ( 1 )
+	sound2:setLooping ( false )
 
-sound3 = MOAIUntzSound.new ()
-sound3:load ( assetdirectory..'explosion.wav' )
-sound3:setVolume ( 1 )
-sound3:setLooping ( false )
+	sound3 = MOAIUntzSound.new ()
+	sound3:load ( assetdirectory..'explosion.wav' )
+	sound3:setVolume ( 1 )
+	sound3:setLooping ( false )
 
-sound4 = MOAIUntzSound.new ()
-sound4:load ( assetdirectory..'woosh.wav' )
-sound4:setVolume ( 1 )
-sound4:setLooping ( false )
+	sound4 = MOAIUntzSound.new ()
+	sound4:load ( assetdirectory..'woosh.wav' )
+	sound4:setVolume ( 1 )
+	sound4:setLooping ( false )
 
-sound5 = MOAIUntzSound.new ()
-sound5:load ( assetdirectory..'boing.wav' )
-sound5:setVolume ( 1 )
-sound5:setLooping ( false )
+	sound5 = MOAIUntzSound.new ()
+	sound5:load ( assetdirectory..'boing.wav' )
+	sound5:setVolume ( 1 )
+	sound5:setLooping ( false )
 
---]]
+	--]]
 
--- backgrounds
+	-- backgrounds
 
-update_loading(100)
-callWithDelay ( 1, fadeoutSplash)
+	update_loading(100)
+	callWithDelay ( 1, fadeoutSplash)
 end
 
 -- USEFUL FUNCTIONS --
 function onLevelEvent ( x, y, z )
---print ("level change "..x)
-viewport:setRotation(0)
-viewport2:setRotation(0)
-if y>0 then viewport:setRotation(180) end
-if y>-0.75 and y<0.75 then
-viewport:setRotation(90)
-viewport2:setRotation(90)
-if x>0 then viewport:setRotation(-90) end
-end
+	--print ("level change "..x)
+	viewport:setRotation(0)
+	viewport2:setRotation(0)
+	if y>0 then viewport:setRotation(180) end
+	if y>-0.75 and y<0.75 then
+		viewport:setRotation(90)
+		viewport2:setRotation(90)
+		if x>0 then viewport:setRotation(-90) end
+	end
 end
 
 function setupRotationSensor()
-if MOAIInputMgr.device.level then
- 
---MOAIInputMgr.device.level:setCallback ( onLevelEvent )
- 
+	if MOAIInputMgr.device.level then
+
+		--MOAIInputMgr.device.level:setCallback ( onLevelEvent )
+
+	end
+
 end
- 
-end
- 
- 
+
+
 function callWithDelay ( delay, func,...)
-local timer = MOAITimer.new ()
-timer:setSpan ( delay )
-timer:setListener ( MOAITimer.EVENT_TIMER_LOOP,
-function ()
-timer:stop ()
-timer = nil
-func ( unpack ( arg ))
-end
-)
-timer:start ()
+	local timer = MOAITimer.new ()
+	timer:setSpan ( delay )
+	timer:setListener ( MOAITimer.EVENT_TIMER_LOOP,
+	function ()
+		timer:stop ()
+		timer = nil
+		func ( unpack ( arg ))
+	end
+	)
+	timer:start ()
 end
 
 -- SPLASH --
 function fadeinSplash()
-layer_splash:setViewport ( viewport )
+	layer_splash:setViewport ( viewport )
 
-logoGfx = MOAIGfxQuad2D.new ()
-logoGfx:setTexture ( assetdirectory.."splash.jpg" )
-logoGfx:setRect ( -8,-5,8,5)
-logo = MOAIProp2D.new ()
-logo:setDeck ( logoGfx )
+	logoGfx = MOAIGfxQuad2D.new ()
+	logoGfx:setTexture ( assetdirectory.."splash.jpg" )
+	logoGfx:setRect ( -8,-5,8,5)
+	logo = MOAIProp2D.new ()
+	logo:setDeck ( logoGfx )
 
-layer_splash:insertProp ( logo )
---logo:seekColor ( 0,0,0,0,0)
+	layer_splash:insertProp ( logo )
+	--logo:seekColor ( 0,0,0,0,0)
 
---loading bar
+	--loading bar
 
-percent=1
-timer=0
-layer_splash:insertProp ( loading )
+	percent=1
+	timer=0
+	layer_splash:insertProp ( loading )
 
---fadeinAction = logo:seekColor ( 1, 1, 1, 1, 2)
---[[
-stab = MOAIUntzSound.new ()
-stab:load (  assetdirectory..'stab.wav' )
-stab:setVolume ( 1 )
-stab:setLooping ( false )
-stab:play ()
---]]
---callWithDelay ( 2, fadeoutSplash)
+	--fadeinAction = logo:seekColor ( 1, 1, 1, 1, 2)
+	--[[
+	stab = MOAIUntzSound.new ()
+	stab:load (  assetdirectory..'stab.wav' )
+	stab:setVolume ( 1 )
+	stab:setLooping ( false )
+	stab:play ()
+	--]]
+	--callWithDelay ( 2, fadeoutSplash)
 end
 
 function fadeoutSplash()
-loading:seekColor ( 0,0,0,0, 3 )
-fadeoutAction = logo:seekColor ( 0,0,0,0, 3 )
-callWithDelay ( 2, game_menu)
+	loading:seekColor ( 0,0,0,0, 3 )
+	fadeoutAction = logo:seekColor ( 0,0,0,0, 3 )
+	callWithDelay ( 2, game_menu)
 end
 
 -- GAME MENU --
-function pointerCallback_game_menu( x, y )	
+function pointerCallback_game_menu( x, y )
 	mouseX, mouseY = layer_menu:wndToWorld ( x, y )
 end
 
 function clickCallback_game_menu ( down )
-	if down then	
-	pick = partition_menu:propForPoint ( mouseX, mouseY )
+	if down then
+		pick = partition_menu:propForPoint ( mouseX, mouseY )
 		if pick then
-		if pick.name=="button_start" then
-			layer_menu:clear()
-			world_menu()
-		end
-		if pick.name=="button_sound" then
-			index=button_sound:getIndex()
-			if index==1 then index=2 
+			if pick.name=="button_start" then
+				layer_menu:clear()
+				world_menu()
+			end
+			if pick.name=="button_sound" then
+				index=button_sound:getIndex()
+				if index==1 then index=2
 				soundon=false
 				----print "soundon=false"
-				elseif
-				index==2 then index=1 
+			elseif
+				index==2 then index=1
 				soundon=true
 				----print "soundon=true"
 			end
 			button_sound:setIndex(index)
 		end
-		end
-	end	
-
-	if down==false then
-
 	end
+end
+
+if down==false then
+
+end
 end
 
 function game_menu()
@@ -541,7 +541,7 @@ layer_menu:insertProp ( button_sound )
 button_sound:setLoc(4,0)
 
 if soundon~=true then
-button_sound:setIndex(2)
+	button_sound:setIndex(2)
 end
 MOAISim.pushRenderPass ( layer_menu )
 
@@ -552,30 +552,30 @@ if MOAIInputMgr.device.pointer then
 	MOAIInputMgr.device.mouseLeft:setCallback ( clickCallback_game_menu )
 else
 	-- touch input
-	MOAIInputMgr.device.touch:setCallback ( 
-		function ( eventType, idx, x, y, tapCount )
-			----print ("Touch event="..eventType)
-			pointerCallback_game_menu ( x, y )
-			if eventType == MOAITouchSensor.TOUCH_DOWN then
-				clickCallback_game_menu ( true )
-			elseif eventType == MOAITouchSensor.TOUCH_UP then
-				clickCallback_game_menu ( false )
-			end
+	MOAIInputMgr.device.touch:setCallback (
+	function ( eventType, idx, x, y, tapCount )
+		----print ("Touch event="..eventType)
+		pointerCallback_game_menu ( x, y )
+		if eventType == MOAITouchSensor.TOUCH_DOWN then
+			clickCallback_game_menu ( true )
+		elseif eventType == MOAITouchSensor.TOUCH_UP then
+			clickCallback_game_menu ( false )
 		end
+	end
 	)
 end
 end
 
 -- WORLD MENU --
-function pointerCallback_world_menu( x, y )	
-	mouseX, mouseY = layer_menu:wndToWorld ( x, y )
+function pointerCallback_world_menu( x, y )
+mouseX, mouseY = layer_menu:wndToWorld ( x, y )
 end
 
 function clickCallback_world_menu ( down )
-	if down then	
+if down then
 	pick = partition_menu:propForPoint ( mouseX, mouseY )
-		if pick then
-		
+	if pick then
+
 		if pick.name=="button_level_exit" then
 			layer_menu:clear()
 			game_menu()
@@ -590,12 +590,12 @@ function clickCallback_world_menu ( down )
 			--start_level(2)
 			--print "LEVEL2"
 		end
-		end
-	end	
-
-	if down==false then
-
 	end
+end
+
+if down==false then
+
+end
 end
 
 function world_menu()
@@ -624,16 +624,16 @@ if MOAIInputMgr.device.pointer then
 	MOAIInputMgr.device.mouseLeft:setCallback ( clickCallback_world_menu )
 else
 	-- touch input
-	MOAIInputMgr.device.touch:setCallback ( 
-		function ( eventType, idx, x, y, tapCount )
-			----print ("Touch event="..eventType)
-			pointerCallback_world_menu ( x, y )
-			if eventType == MOAITouchSensor.TOUCH_DOWN then
-				clickCallback_world_menu ( true )
-			elseif eventType == MOAITouchSensor.TOUCH_UP then
-				clickCallback_world_menu ( false )
-			end
+	MOAIInputMgr.device.touch:setCallback (
+	function ( eventType, idx, x, y, tapCount )
+		----print ("Touch event="..eventType)
+		pointerCallback_world_menu ( x, y )
+		if eventType == MOAITouchSensor.TOUCH_DOWN then
+			clickCallback_world_menu ( true )
+		elseif eventType == MOAITouchSensor.TOUCH_UP then
+			clickCallback_world_menu ( false )
 		end
+	end
 	)
 end
 end
@@ -654,26 +654,26 @@ myDialog:close()
 end
 function Dialog:new(o)
 
-    o = o or {
-	    buttonnumber=4,
-		description="Description of the dialog box",
-		text="Level Complete?",
-        button1text="Button 1",
-		button1img=assetdirectory.."button1.png",
-		button2text="Button 2",
-		button2img=assetdirectory.."button2.png",
-		button3text="Button 3",
-		button3img=assetdirectory.."button3.png",
-		button4text="Button 4",
-		button4img=assetdirectory.."button4.png",
-		startx=0-1.5*(64+8),
-		starty=-128,
-		width=64+8
-    }
+o = o or {
+	buttonnumber=4,
+	description="Description of the dialog box",
+	text="Level Complete?",
+	button1text="Button 1",
+	button1img=assetdirectory.."button1.png",
+	button2text="Button 2",
+	button2img=assetdirectory.."button2.png",
+	button3text="Button 3",
+	button3img=assetdirectory.."button3.png",
+	button4text="Button 4",
+	button4img=assetdirectory.."button4.png",
+	startx=0-1.5*(64+8),
+	starty=-128,
+	width=64+8
+}
 
-    setmetatable(o, self)
-    self.__index = self 
-    return o
+setmetatable(o, self)
+self.__index = self
+return o
 end
 
 function Dialog:close()
@@ -697,16 +697,16 @@ alert_layer:insertProp ( prop )
 
 
 if self.buttonnumber>0 then
-self:addButton ( self.startx+self.width*0,self.starty, 1,1, self.button1text,self.button1img)
+	self:addButton ( self.startx+self.width*0,self.starty, 1,1, self.button1text,self.button1img)
 end
 if self.buttonnumber>1 then
-self:addButton ( self.startx+self.width*1,self.starty, 1,1, self.button2text,self.button2img )
+	self:addButton ( self.startx+self.width*1,self.starty, 1,1, self.button2text,self.button2img )
 end
 if self.buttonnumber>2 then
-self:addButton ( self.startx+self.width*2,self.starty, 1,1, self.button3text,self.button3img )
+	self:addButton ( self.startx+self.width*2,self.starty, 1,1, self.button3text,self.button3img )
 end
 if self.buttonnumber>3 then
-self:addButton ( self.startx+self.width*3,self.starty, 1,1, self.button4text,self.button4img )
+	self:addButton ( self.startx+self.width*3,self.starty, 1,1, self.button4text,self.button4img )
 end
 
 -- add title and description
@@ -726,35 +726,35 @@ alert_layer:seekLoc(0,0,0,2)
 --alert_layer:seekColor ( 1,1,1,1, 2 )
 --
 if MOAIInputMgr.device.pointer then
-	
-	
-	-- mouse input
-	MOAIInputMgr.device.pointer:setCallback ( 
-		function (x,y)
-		self:pointerCallback(x,y)
-		end
-		)
 
-	MOAIInputMgr.device.mouseLeft:setCallback ( 
-		function (eventType)
+
+	-- mouse input
+	MOAIInputMgr.device.pointer:setCallback (
+	function (x,y)
+		self:pointerCallback(x,y)
+	end
+	)
+
+	MOAIInputMgr.device.mouseLeft:setCallback (
+	function (eventType)
 		self:clickCallback(eventType)
-		end
-		)
+	end
+	)
 else
 
 	-- touch input
-	MOAIInputMgr.device.touch:setCallback ( 
-	
-		function ( eventType, idx, x, y, tapCount )
+	MOAIInputMgr.device.touch:setCallback (
 
-			self:pointerCallback ( x, y )
-		
-			if eventType == MOAITouchSensor.TOUCH_DOWN then
-				self:clickCallback ( true )
-			elseif eventType == MOAITouchSensor.TOUCH_UP then
-				self:clickCallback ( false )
-			end
+	function ( eventType, idx, x, y, tapCount )
+
+		self:pointerCallback ( x, y )
+
+		if eventType == MOAITouchSensor.TOUCH_DOWN then
+			self:clickCallback ( true )
+		elseif eventType == MOAITouchSensor.TOUCH_UP then
+			self:clickCallback ( false )
 		end
+	end
 	)
 end
 --]]
@@ -790,130 +790,130 @@ alert_layer:insertProp ( textbox2 )
 
 end
 function Dialog:addButton( x, y, xScl, yScl, name, texture )
-	local prop = MOAIProp2D.new ()
-	gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( texture )
-	gfxQuad:setRect ( -32,-32,32,32 )
-	prop:setDeck ( gfxQuad )
-	prop:setPriority ( 5 )
-	prop:setLoc ( x, y )
-	prop:setScl ( xScl, yScl )
-	prop.name = name 
-	alert_partition:insertProp ( prop )
-	--prop:seekColor ( 0,0,0,0,0)
-	--prop:seekColor ( 1, 1, 1, 1, 1)
+local prop = MOAIProp2D.new ()
+gfxQuad = MOAIGfxQuad2D.new ()
+gfxQuad:setTexture ( texture )
+gfxQuad:setRect ( -32,-32,32,32 )
+prop:setDeck ( gfxQuad )
+prop:setPriority ( 5 )
+prop:setLoc ( x, y )
+prop:setScl ( xScl, yScl )
+prop.name = name
+alert_partition:insertProp ( prop )
+--prop:seekColor ( 0,0,0,0,0)
+--prop:seekColor ( 1, 1, 1, 1, 1)
 end
 
 function Dialog:pointerCallback( x, y )
-	
-	local oldX = mouseX
-	local oldY = mouseY	
-	mouseX, mouseY = alert_layer:wndToWorld ( x, y )
+
+local oldX = mouseX
+local oldY = mouseY
+mouseX, mouseY = alert_layer:wndToWorld ( x, y )
 end
-		
+
 function Dialog:clickCallback( down )
-	
-	if down then
-		pick = alert_partition:propForPoint ( mouseX, mouseY )
-		
-		if pick then
-			--print ( pick.name )
-			if pick.name=="Button 1" then 
-				-- exit to main menu
-				alert_layer:clear()
-				layer:clear()
-				layer_hud:clear()
-				layer_back:clear()
-				layer_med:clear()
-				layer_close:clear()
-				layer_particles:clear()
-				layer:setBox2DWorld(nil)
-				world=nil
-				world_menu()
-			end
-			
-			if pick.name=="Button 2" then 
-				
 
-			end
-			
-			if pick.name=="Button 3" then 
-	
-			end
-			
-			if pick.name=="Button 4" then 
+if down then
+	pick = alert_partition:propForPoint ( mouseX, mouseY )
 
-			end
-			
-			if pick.name=="dialog_close" then 
+	if pick then
+		--print ( pick.name )
+		if pick.name=="Button 1" then
+			-- exit to main menu
+			alert_layer:clear()
+			layer:clear()
+			layer_hud:clear()
+			layer_back:clear()
+			layer_med:clear()
+			layer_close:clear()
+			layer_particles:clear()
+			layer:setBox2DWorld(nil)
+			world=nil
+			world_menu()
+		end
+
+		if pick.name=="Button 2" then
+
+
+		end
+
+		if pick.name=="Button 3" then
+
+		end
+
+		if pick.name=="Button 4" then
+
+		end
+
+		if pick.name=="dialog_close" then
 			--[[
 			local action=alert_layer:seekLoc ( -900,0,0,2 )
-			
-				action:setListener ( MOAIAction.EVENT_STOP, 
-				function ()
-					alert_layer:clear()
-					point_to_game()
-				end
-				)
-			--]]
+
+			action:setListener ( MOAIAction.EVENT_STOP,
+			function ()
 				alert_layer:clear()
 				point_to_game()
 			end
-		end
-	else
-		if pick then
-			pick = nil
+			)
+			--]]
+			alert_layer:clear()
+			point_to_game()
 		end
 	end
+else
+	if pick then
+		pick = nil
+	end
+end
 end
 
 
 function drawHills(hillStartX,hillStartY,numberOfHills,pixelStep,hillOffsetY,hillheight)
-			bottom=-10
-			-- defining hill width, in pixels, that is the stage width divided by the number of hills
-			hillWidth=(screen_width*2/numberOfHills)
-			-- defining the number of slices of the hill. This number is determined by the width of the hill in pixels divided by the amount of pixels between two points
-			hillSlices=hillWidth/pixelStep
-			hillSliceWidth=(hillWidth/pixelStep)+1
+bottom=-10
+-- defining hill width, in pixels, that is the stage width divided by the number of hills
+hillWidth=(screen_width*2/numberOfHills)
+-- defining the number of slices of the hill. This number is determined by the width of the hill in pixels divided by the amount of pixels between two points
+hillSlices=hillWidth/pixelStep
+hillSliceWidth=(hillWidth/pixelStep)+1
 
-			-- looping through the hills
-			for i=0,numberOfHills,1 do
-				-- setting a random hill height in pixels
-				randomHeight=math.random()*hillheight
-				-- this is necessary to make all hills (execept the first one) begin where the previous hill ended
-				if(i~=0) then hillStartY=hillStartY-randomHeight end
+-- looping through the hills
+for i=0,numberOfHills,1 do
+	-- setting a random hill height in pixels
+	randomHeight=math.random()*hillheight
+	-- this is necessary to make all hills (execept the first one) begin where the previous hill ended
+	if(i~=0) then hillStartY=hillStartY-randomHeight end
 
-				-- looping through hill slices
-				for j=0,hillSlices,1 do
-				
-						bodytest = world:addBody ( MOAIBox2DBody.STATIC )
-						-- defining the point of the hill
-						x=j*pixelStep+hillWidth*i
-						y=hillStartY+randomHeight*math.cos(2*math.pi/hillSlices*j)+hillOffsetY
-	
-						point4x=(j*pixelStep+hillWidth*i)/32+hillStartX
-						point4y=bottom
-						
-						point3x=(j*pixelStep+hillWidth*i)/32+hillStartX
-						point3y=((hillStartY+randomHeight*math.cos(2*math.pi/hillSliceWidth*j))/32)+hillOffsetY
-						
-						
-						point2x=((j+1)*pixelStep+hillWidth*i)/32+hillStartX
-						point2y=(hillStartY+randomHeight*math.cos(2*math.pi/hillSliceWidth*(j+1)))/32+hillOffsetY
-						
-						point1x=((j+1)*pixelStep+hillWidth*i)/32+hillStartX
-						point1y=bottom
-						
-						--print ("point1x="..point1x.." point1y="..point1y.." point2x="..point2x.." point2y="..point2y)
-						--print ("point3x="..point3x.." point3y="..point3y.." point4x="..point4x.." point4y="..point4y)
-						t = { point1x,point1y,point2x,point2y,point3x,point3y,point4x,point4y }
-						bodytest:addPolygon (t)	
-				
-						--add_actor(x,y,pixelStep/32,pixelStep/32,0.5,0.5,0.5,"Box","Static","images/cloud.png")						
-				end
-				-- this is also necessary to make all hills (execept the first one) begin where the previous hill ended
-				hillStartY = hillStartY+randomHeight
-			end
+	-- looping through hill slices
+	for j=0,hillSlices,1 do
+
+		bodytest = world:addBody ( MOAIBox2DBody.STATIC )
+		-- defining the point of the hill
+		x=j*pixelStep+hillWidth*i
+		y=hillStartY+randomHeight*math.cos(2*math.pi/hillSlices*j)+hillOffsetY
+
+		point4x=(j*pixelStep+hillWidth*i)/32+hillStartX
+		point4y=bottom
+
+		point3x=(j*pixelStep+hillWidth*i)/32+hillStartX
+		point3y=((hillStartY+randomHeight*math.cos(2*math.pi/hillSliceWidth*j))/32)+hillOffsetY
+
+
+		point2x=((j+1)*pixelStep+hillWidth*i)/32+hillStartX
+		point2y=(hillStartY+randomHeight*math.cos(2*math.pi/hillSliceWidth*(j+1)))/32+hillOffsetY
+
+		point1x=((j+1)*pixelStep+hillWidth*i)/32+hillStartX
+		point1y=bottom
+
+		--print ("point1x="..point1x.." point1y="..point1y.." point2x="..point2x.." point2y="..point2y)
+		--print ("point3x="..point3x.." point3y="..point3y.." point4x="..point4x.." point4y="..point4y)
+		t = { point1x,point1y,point2x,point2y,point3x,point3y,point4x,point4y }
+		bodytest:addPolygon (t)
+
+		--add_actor(x,y,pixelStep/32,pixelStep/32,0.5,0.5,0.5,"Box","Static","images/cloud.png")
+	end
+	-- this is also necessary to make all hills (execept the first one) begin where the previous hill ended
+	hillStartY = hillStartY+randomHeight
+end
 end
 
 
@@ -954,9 +954,9 @@ reg4 = MOAIParticleScript.packReg ( 4 )
 reg5 = MOAIParticleScript.packReg ( 5 )
 CONST = MOAIParticleScript.packConst
 
- ----------
- --init script
- ----------
+----------
+--init script
+----------
 
 sparkInitScript = MOAIParticleScript.new ()
 -- this takes the registers you created above and turns them into random number generators
@@ -976,7 +976,7 @@ sparkRenderScript:sprite ()
 -- this controls the amount your particle cloud will spread out over the x axis
 -- and how fast / smooth it spreads. Note it is getting a random value from
 -- one of the script registers
-sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_X, CONST(0), reg1, MOAIEaseType.SHARP_EASE_IN )		
+sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_X, CONST(0), reg1, MOAIEaseType.SHARP_EASE_IN )
 -- this does the same over the y axis
 sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_Y, CONST(0), reg2, MOAIEaseType.SHARP_EASE_IN )
 
@@ -984,7 +984,7 @@ sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_Y, CONST(0), reg2, MOA
 sparkRenderScript:ease		( MOAIParticleScript.SPRITE_X_SCL, CONST(0.5), CONST(size*2),MOAIEaseType.EASE_IN)
 sparkRenderScript:ease		( MOAIParticleScript.SPRITE_Y_SCL, CONST(0.5), CONST(size*2),MOAIEaseType.EASE_IN)
 
--- creates sparkling color	
+-- creates sparkling color
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_RED, reg5 )
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_BLUE, reg3 )
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_GREEN, reg3 )
@@ -1075,9 +1075,9 @@ reg4 = MOAIParticleScript.packReg ( 4 )
 reg5 = MOAIParticleScript.packReg ( 5 )
 CONST = MOAIParticleScript.packConst
 
- ----------
- --init script
- ----------
+----------
+--init script
+----------
 
 sparkInitScript = MOAIParticleScript.new ()
 -- this takes the registers you created above and turns them into random number generators
@@ -1097,7 +1097,7 @@ sparkRenderScript:sprite ()
 -- this controls the amount your particle cloud will spread out over the x axis
 -- and how fast / smooth it spreads. Note it is getting a random value from
 -- one of the script registers
-sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_X, CONST(0), reg1, MOAIEaseType.SHARP_EASE_IN )		
+sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_X, CONST(0), reg1, MOAIEaseType.SHARP_EASE_IN )
 -- this does the same over the y axis
 sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_Y, CONST(0), reg2, MOAIEaseType.SHARP_EASE_IN )
 
@@ -1105,7 +1105,7 @@ sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_Y, CONST(0), reg2, MOA
 sparkRenderScript:ease		( MOAIParticleScript.SPRITE_X_SCL, CONST(sizex/4), CONST(0.1),MOAIEaseType.EASE_IN)
 sparkRenderScript:ease		( MOAIParticleScript.SPRITE_Y_SCL, CONST(sizey/4), CONST(0.1),MOAIEaseType.EASE_IN)
 
--- creates sparkling color	
+-- creates sparkling color
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_RED, reg5 )
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_BLUE, reg3 )
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_GREEN, reg3 )
@@ -1190,9 +1190,9 @@ reg4 = MOAIParticleScript.packReg ( 4 )
 reg5 = MOAIParticleScript.packReg ( 5 )
 CONST = MOAIParticleScript.packConst
 
- ----------
- --init script
- ----------
+----------
+--init script
+----------
 
 sparkInitScript = MOAIParticleScript.new ()
 -- this takes the registers you created above and turns them into random number generators
@@ -1215,7 +1215,7 @@ sparkRenderScript:sprite ()
 -- this controls the amount your particle cloud will spread out over the x axis
 -- and how fast / smooth it spreads. Note it is getting a random value from
 -- one of the script registers
-sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_X, CONST(0), reg1, MOAIEaseType.SHARP_EASE_IN )		
+sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_X, CONST(0), reg1, MOAIEaseType.SHARP_EASE_IN )
 -- this does the same over the y axis
 sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_Y, CONST(0), reg2, MOAIEaseType.SHARP_EASE_IN )
 
@@ -1223,7 +1223,7 @@ sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_Y, CONST(0), reg2, MOA
 sparkRenderScript:ease		( MOAIParticleScript.SPRITE_X_SCL, reg4, reg6,MOAIEaseType.EASE_IN)
 sparkRenderScript:ease		( MOAIParticleScript.SPRITE_Y_SCL, reg4, reg6,MOAIEaseType.EASE_IN)
 
--- creates sparkling color	
+-- creates sparkling color
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_RED, reg5 )
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_BLUE, reg3 )
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_GREEN, reg3 )
@@ -1308,9 +1308,9 @@ reg4 = MOAIParticleScript.packReg ( 4 )
 reg5 = MOAIParticleScript.packReg ( 5 )
 CONST = MOAIParticleScript.packConst
 
- ----------
- --init script
- ----------
+----------
+--init script
+----------
 
 sparkInitScript = MOAIParticleScript.new ()
 -- this takes the registers you created above and turns them into random number generators
@@ -1330,7 +1330,7 @@ sparkRenderScript:sprite ()
 -- this controls the amount your particle cloud will spread out over the x axis
 -- and how fast / smooth it spreads. Note it is getting a random value from
 -- one of the script registers
-sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_X, CONST(0), reg1, MOAIEaseType.SHARP_EASE_IN )		
+sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_X, CONST(0), reg1, MOAIEaseType.SHARP_EASE_IN )
 -- this does the same over the y axis
 sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_Y, CONST(0), reg2, MOAIEaseType.SHARP_EASE_IN )
 
@@ -1338,7 +1338,7 @@ sparkRenderScript:easeDelta	( MOAIParticleScript.PARTICLE_Y, CONST(0), reg2, MOA
 sparkRenderScript:ease		( MOAIParticleScript.SPRITE_X_SCL, CONST(0.5), CONST(sizex*2),MOAIEaseType.EASE_IN)
 sparkRenderScript:ease		( MOAIParticleScript.SPRITE_Y_SCL, CONST(0.5), CONST(sizey*2),MOAIEaseType.EASE_IN)
 
--- creates sparkling color	
+-- creates sparkling color
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_RED, reg5 )
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_BLUE, reg3 )
 --sparkRenderScript:set ( MOAIParticleScript.SPRITE_GREEN, reg3 )
@@ -1417,163 +1417,163 @@ end
 
 function popscore(x,y,points)
 
-	score=score+points
-	text = '<c:FFF>'..points..'<c>'
-	
-	popscorebox = MOAITextBox.new ()
-	popscorebox:setString ( text )
-	popscorebox:setFont ( font )
-	popscorebox:setAlignment(MOAITextBox.CENTER_JUSTIFY)
-	popscorebox:setRect ( -100,-100,100,100)
-	popscorebox:setScl ( 0.02,0.02,0.02)
+score=score+points
+text = '<c:FFF>'..points..'<c>'
 
-	popscorebox:setLoc(x,y-1)
-	popscorebox:setYFlip ( true )
-	popscorebox:setPriority(1)
+popscorebox = MOAITextBox.new ()
+popscorebox:setString ( text )
+popscorebox:setFont ( font )
+popscorebox:setAlignment(MOAITextBox.CENTER_JUSTIFY)
+popscorebox:setRect ( -100,-100,100,100)
+popscorebox:setScl ( 0.02,0.02,0.02)
 
-	layer_splash:insertProp ( popscorebox )
+popscorebox:setLoc(x,y-1)
+popscorebox:setYFlip ( true )
+popscorebox:setPriority(1)
 
-	popscorebox:seekScl ( 0.05,0.05,0.05,4,MOAIEaseType.LINEAR)
-	popscorebox:seekLoc( x,y-2,0, 4,MOAIEaseType.LINEAR )
+layer_splash:insertProp ( popscorebox )
 
-	update_score()
-		
-	local action=popscorebox:seekColor ( 1,1,1,0, 4 )
-    action:setListener ( MOAIAction.EVENT_STOP, 
-	function ()
+popscorebox:seekScl ( 0.05,0.05,0.05,4,MOAIEaseType.LINEAR)
+popscorebox:seekLoc( x,y-2,0, 4,MOAIEaseType.LINEAR )
+
+update_score()
+
+local action=popscorebox:seekColor ( 1,1,1,0, 4 )
+action:setListener ( MOAIAction.EVENT_STOP,
+function ()
 
 	alert_layer:removeProp(popscorebox)
-	end
-	)
+end
+)
 
-	popscorebox_counter=popscorebox_counter+1
+popscorebox_counter=popscorebox_counter+1
 end
 
 function update_score()
 
-	layer_hud:removeProp ( scorebox )
-	layer_hud:removeProp ( scorebox_shadow )
-	text = '<c:FFF>'..score..'<c>'
-	
-	-- debug output here 
-	-- text = '<c:FFF>'..MOAIEnvironment.osBrand..'<c>'
-	
-	
-	scorebox = MOAITextBox.new ()
-	scorebox:setString ( text )
-	scorebox:setFont ( bigfont )
-	scorebox:setAlignment(MOAITextBox.CENTER_JUSTIFY)
-	scorebox:setRect ( -100,-30,100,30)
-	scorebox:setLoc(0,(screen_height/2)-30)
-	
-	scorebox:setYFlip ( true )
-	scorebox:setPriority(10)
-	
-	text = '<c:000>'..score..'<c>'
-	scorebox_shadow = MOAITextBox.new ()
-	scorebox_shadow:setString ( text )
-	scorebox_shadow:setFont ( bigfont )
-	scorebox_shadow:setAlignment(MOAITextBox.CENTER_JUSTIFY)
-	scorebox_shadow:setRect ( -100,-30,100,30)
-	scorebox_shadow:setLoc(0+2,(screen_height/2)-30)
-	scorebox_shadow:setYFlip ( true )
-	scorebox_shadow:setPriority(1)
-	
-	layer_hud:insertProp ( scorebox_shadow )
-	layer_hud:insertProp ( scorebox )
-	
+layer_hud:removeProp ( scorebox )
+layer_hud:removeProp ( scorebox_shadow )
+text = '<c:FFF>'..score..'<c>'
+
+-- debug output here
+-- text = '<c:FFF>'..MOAIEnvironment.osBrand..'<c>'
+
+
+scorebox = MOAITextBox.new ()
+scorebox:setString ( text )
+scorebox:setFont ( bigfont )
+scorebox:setAlignment(MOAITextBox.CENTER_JUSTIFY)
+scorebox:setRect ( -100,-30,100,30)
+scorebox:setLoc(0,(screen_height/2)-30)
+
+scorebox:setYFlip ( true )
+scorebox:setPriority(10)
+
+text = '<c:000>'..score..'<c>'
+scorebox_shadow = MOAITextBox.new ()
+scorebox_shadow:setString ( text )
+scorebox_shadow:setFont ( bigfont )
+scorebox_shadow:setAlignment(MOAITextBox.CENTER_JUSTIFY)
+scorebox_shadow:setRect ( -100,-30,100,30)
+scorebox_shadow:setLoc(0+2,(screen_height/2)-30)
+scorebox_shadow:setYFlip ( true )
+scorebox_shadow:setPriority(1)
+
+layer_hud:insertProp ( scorebox_shadow )
+layer_hud:insertProp ( scorebox )
+
 
 end
 
 function pointerCallback ( pointerx, pointery )
-	x=pointerx
-	y=pointery
-	pointercalls=pointercalls+1
-	----print ("x="..x.."y="..y)
-	mouseX, mouseY = layer:wndToWorld ( x, y )
-	mouseX_back, mouseY_back = layer_back:wndToWorld ( x, y )
-	hudX,hudY=layer_hud:wndToWorld ( x, y )		
-	pick = partition:propForPoint ( hudX,hudY )
-	gamepick = gamepartition:propForPoint ( mouseX,mouseY )
+x=pointerx
+y=pointery
+pointercalls=pointercalls+1
+----print ("x="..x.."y="..y)
+mouseX, mouseY = layer:wndToWorld ( x, y )
+mouseX_back, mouseY_back = layer_back:wndToWorld ( x, y )
+hudX,hudY=layer_hud:wndToWorld ( x, y )
+pick = partition:propForPoint ( hudX,hudY )
+gamepick = gamepartition:propForPoint ( mouseX,mouseY )
 
 
-	if mousedown==true then
-		xMove=x
-		yMove=y
-		mousedowntime=pointercalls
-	
-		if playerpicked~=true and gamepick~=true then
+if mousedown==true then
+	xMove=x
+	yMove=y
+	mousedowntime=pointercalls
+
+	if playerpicked~=true and gamepick~=true then
 		panning=true
-			
-		end
 
-		if currentplayer then
-				--dragging player
-				if actor_fixtures[currentplayer].name=="Player" then
-					bx,by=actor_bodies[currentplayer]:getPosition()
-					
-					if bx then 
-						----print ("Bodyx="..bx.." mouse x="..mouseX)
-						actor_bodies[currentplayer]:setLinearVelocity((bx-mouseX)*5*-1,(by-mouseY)*5*-1)
-						actor_bodies[currentplayer]:setAwake()
-					end
-				end
-		
-		end
-		
-		
-		if gamepick then
-			if (gamepick.name=="Player" or gamepick.name=="Player1" or gamepick.name=="Player2" or gamepick.name=="Player3" or gamepick.name=="Circle" or gamepick.name=="Circle2" or gamepick.name=="Box" or gamepick.name=="Triangle") then	
-	
+	end
 
+	if currentplayer then
+		--dragging player
+		if actor_fixtures[currentplayer].name=="Player" then
+			bx,by=actor_bodies[currentplayer]:getPosition()
+
+			if bx then
+				----print ("Bodyx="..bx.." mouse x="..mouseX)
+				actor_bodies[currentplayer]:setLinearVelocity((bx-mouseX)*5*-1,(by-mouseY)*5*-1)
+				actor_bodies[currentplayer]:setAwake()
 			end
 		end
-		
 
-		-- dragging camera
-		if playerpicked~=true and gamepick~=true and panning==true and currentplayer==nil then
+	end
+
+
+	if gamepick then
+		if (gamepick.name=="Player" or gamepick.name=="Player1" or gamepick.name=="Player2" or gamepick.name=="Player3" or gamepick.name=="Circle" or gamepick.name=="Circle2" or gamepick.name=="Box" or gamepick.name=="Triangle") then
+
+
+		end
+	end
+
+
+	-- dragging camera
+	if playerpicked~=true and gamepick~=true and panning==true and currentplayer==nil then
 		--MOAIDialogIOS.showDialog ( "hi!", "DRAGGING CAMERA")
 
-			cx,cy=cameraprop:getLoc()			
-			gotoX=cx-mouseX+mouseXdown
-			
-			--print ("gotox="..gotoX)
-			gotoY=cy
-			
-			if gotoX>boundaryright then gotoX=boundaryright end
-			if gotoX<boundaryleft then gotoX=boundaryleft end
+		cx,cy=cameraprop:getLoc()
+		gotoX=cx-mouseX+mouseXdown
 
-			--cameraprop:setLoc(gotoX,cy)
-			if (usecamerabody==false and movingcamera==false) then
+		--print ("gotox="..gotoX)
+		gotoY=cy
+
+		if gotoX>boundaryright then gotoX=boundaryright end
+		if gotoX<boundaryleft then gotoX=boundaryleft end
+
+		--cameraprop:setLoc(gotoX,cy)
+		if (usecamerabody==false and movingcamera==false) then
 			movingcamera=true
-			
+
 			movecamera=cameraprop:seekLoc(gotoX,cy,0.1,MOAIEaseType.LINEAR)
-			movecamera:setListener ( MOAIAction.EVENT_STOP, 
+			movecamera:setListener ( MOAIAction.EVENT_STOP,
 			function ()
 				movingcamera=false
 			end
 			)
-			
+
 			--fitter:stop()
-			end
-			
-			if usecamerabody==true then
-			--camerabody:setTransform(cbx+gotoX,cby,0)
-			end
-			oldmouseX=mouseX
-			oldmouseY=mouseY
 		end
 
-
-
+		if usecamerabody==true then
+			--camerabody:setTransform(cbx+gotoX,cby,0)
+		end
+		oldmouseX=mouseX
+		oldmouseY=mouseY
 	end
+
+
+
+end
 end
 
 function clickCallback ( down )
 
 -- pointer DOWN
 
-	if down==true then		
+if down==true then
 	lastX=x
 	lastY=y
 
@@ -1583,205 +1583,205 @@ function clickCallback ( down )
 	mouseYdown=mouseY
 	hudXdown=hudX
 	hudYdown=hudY
-	
+
 	cameraXdown,cameraYdown=cameraprop:getLoc()
 	xDown=x
 	print ("xDown="..xDown)
 	yDown=y
 	----print ("yDown="..yDown)
-	
-	
+
+
 	--actor_bodies[currentplayer]:setLinearVelocity(-5,0)
-	
-		if pick then 
-			if pick.name=="button_game_exit" then
+
+	if pick then
+		if pick.name=="button_game_exit" then
 			cx,cy=camera:getLoc()
 			--confetti(cx,cy,particletexture5,1,1)
-				myDialog=Dialog:new()
-				myDialog.text="TESTING!"
-				myDialog.description="A new and exciting desc!"
-				myDialog.buttonnumber=2
-				myDialog:show()
-				--add_arrow(0,-5)
-			end
+			myDialog=Dialog:new()
+			myDialog.text="TESTING!"
+			myDialog.description="A new and exciting desc!"
+			myDialog.buttonnumber=2
+			myDialog:show()
+			--add_arrow(0,-5)
 		end
-		
-		if pick then 
-			if pick.name=="button_game_jump" then
+	end
+
+	if pick then
+		if pick.name=="button_game_jump" then
 			cx,cy=camera:getLoc()
 			bx,by=actor_bodies[mainplayer]:getPosition()
 			vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 			actor_bodies[mainplayer]:applyLinearImpulse ( 0,2,bx,by )
-			
+
 			anchor2:setParent ( actor_sprites[mainplayer] )
-	
-			end
-			
-			if pick.name=="button_game_left" then
+
+		end
+
+		if pick.name=="button_game_left" then
 			cx,cy=camera:getLoc()
 			bx,by=actor_bodies[mainplayer]:getPosition()
 			vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 			actor_bodies[mainplayer]:applyLinearImpulse ( -1,0,bx,by )
-			
+
 			anchor2:setParent ( actor_sprites[mainplayer] )
-	
-			end
-			
-			if pick.name=="button_game_right" then
+
+		end
+
+		if pick.name=="button_game_right" then
 			cx,cy=camera:getLoc()
 			bx,by=actor_bodies[mainplayer]:getPosition()
 			vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 			actor_bodies[mainplayer]:applyLinearImpulse ( 1,0,bx,by )
-			
+
 			anchor2:setParent ( actor_sprites[mainplayer] )
-	
-			end
-		end
-		
-		if gamepick then
-			if (gamepick.name=="Player" or gamepick.name=="Player1" or gamepick.name=="Player2" or gamepick.name=="Player3" or gamepick.name=="Player4"  or gamepick.name=="Player5") then
-				currentplayer=gamepick.userdata
-				--currentplayer.name=gamepick.name
-				
-			end
-		end
-		
-		if gamepick==nil then
-			--fitter:removeAnchor(anchor2)
-			cx,cy=camera:getLoc()
-			--cpx,cpy=camerabody:getPosition()
-			cpx,cpy=cameraprop:getLoc()
-			--camerabody:setTransform(cx,cpy,0)
-			--cameraprop:setLoc(cx,cpy)
-			--fitter:insertAnchor(anchor)
+
 		end
 	end
 
--- pointer UP	
+	if gamepick then
+		if (gamepick.name=="Player" or gamepick.name=="Player1" or gamepick.name=="Player2" or gamepick.name=="Player3" or gamepick.name=="Player4"  or gamepick.name=="Player5") then
+			currentplayer=gamepick.userdata
+			--currentplayer.name=gamepick.name
 
-	if down==false then 
-		
+		end
+	end
+
+	if gamepick==nil then
+		--fitter:removeAnchor(anchor2)
+		cx,cy=camera:getLoc()
+		--cpx,cpy=camerabody:getPosition()
+		cpx,cpy=cameraprop:getLoc()
+		--camerabody:setTransform(cx,cpy,0)
+		--cameraprop:setLoc(cx,cpy)
+		--fitter:insertAnchor(anchor)
+	end
+end
+
+-- pointer UP
+
+if down==false then
+
 	mouseXup=mouseX
 	mouseYup=mouseY
 	mouseuptimer=pointercalls-mousedowntimer
 
 	if (mouseuptimer<10) then
 		--fling
-		
+
 		cx,cy=cameraprop:getLoc()
 		diffx=x-lastX
 		diffx=diffx/16
 		gotoX=cx-diffx
-		
+
 		--print ("cx="..cx.." lastx="..lastX.." x="..x.." Gotox="..gotoX)
-		
+
 		if (usecamerabody==false) then
 			movecamera=cameraprop:seekLoc(gotoX,cy,1,MOAIEaseType.SMOOTH)
 		end
-		
+
 	end
-		if dragbody~=nil then
-			lastdragbody=dragbody
+	if dragbody~=nil then
+		lastdragbody=dragbody
+	end
+	dragbody=nil
+	mousedown=false
+
+	if currentplayer then
+		if (actor_fixtures[currentplayer].name=="Player1") then
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
+			end
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
+			end
+			actor_joints[currentplayer]:destroy()
+			actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
+
+			actor_bodies[currentplayer]:setAwake()
+			actor_sprites[currentplayer]:setIndex(2)
+			anchor2:setParent ( actor_sprites[currentplayer] )
+			fitter:insertAnchor ( anchor2 )
+			--fitter:removeAnchor(anchor)
 		end
-		dragbody=nil
-		mousedown=false 
-		
-		if currentplayer then
-			if (actor_fixtures[currentplayer].name=="Player1") then
-				
-				if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
-					--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
-				end
-				
-				if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
-					--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-				end
-				actor_joints[currentplayer]:destroy()
-				actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-				
-				actor_bodies[currentplayer]:setAwake()
-				actor_sprites[currentplayer]:setIndex(2)
-				anchor2:setParent ( actor_sprites[currentplayer] )
-				fitter:insertAnchor ( anchor2 )	
-				--fitter:removeAnchor(anchor)
+
+		if (actor_fixtures[currentplayer].name=="Player2") then
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
 			end
-	
-			if (actor_fixtures[currentplayer].name=="Player2") then
-				
-				if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
-					--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
-				end
-				
-				if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
-					--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-				end
-	
-				actor_bodies[currentplayer]:setLinearVelocity(5,20)
-				
-				actor_bodies[currentplayer]:setAwake()
-				actor_sprites[currentplayer]:setIndex(2)
-				anchor2:setParent ( actor_sprites[currentplayer] )
-				fitter:insertAnchor ( anchor2 )	
-				--fitter:removeAnchor(anchor)
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
 			end
-			
-			if (actor_fixtures[currentplayer].name=="Player3") then
-				
-				if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
-					--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
-				end
-				
-				if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
-					--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-				end
-				
-				--actor_bodies[currentplayer]:setLinearVelocity(5,20)
-				
-				bx,by=actor_bodies[currentplayer]:getPosition()
-				confetti(bx,by,particletexture5,1,1)
-				
-				actor_bodies[currentplayer]:setAwake()
-				actor_sprites[currentplayer]:setIndex(2)
-				anchor2:setParent ( actor_sprites[currentplayer] )
-				fitter:insertAnchor ( anchor2 )	
-				--fitter:removeAnchor(anchor)
+
+			actor_bodies[currentplayer]:setLinearVelocity(5,20)
+
+			actor_bodies[currentplayer]:setAwake()
+			actor_sprites[currentplayer]:setIndex(2)
+			anchor2:setParent ( actor_sprites[currentplayer] )
+			fitter:insertAnchor ( anchor2 )
+			--fitter:removeAnchor(anchor)
+		end
+
+		if (actor_fixtures[currentplayer].name=="Player3") then
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
 			end
-			
-			if (actor_fixtures[currentplayer].name=="Player5") then
-				actor_bodies[currentplayer]:setLinearVelocity(5,0)
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
 			end
-			
-						if (actor_fixtures[currentplayer].name=="Player4") then
-				
-				bx,by=actor_bodies[currentplayer]:getPosition()
-				
-				if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
-					--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
-					add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
-				end
-				
-				if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
-					--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-					add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
-				end	
+
+			--actor_bodies[currentplayer]:setLinearVelocity(5,20)
+
+			bx,by=actor_bodies[currentplayer]:getPosition()
+			confetti(bx,by,particletexture5,1,1)
+
+			actor_bodies[currentplayer]:setAwake()
+			actor_sprites[currentplayer]:setIndex(2)
+			anchor2:setParent ( actor_sprites[currentplayer] )
+			fitter:insertAnchor ( anchor2 )
+			--fitter:removeAnchor(anchor)
+		end
+
+		if (actor_fixtures[currentplayer].name=="Player5") then
+			actor_bodies[currentplayer]:setLinearVelocity(5,0)
+		end
+
+		if (actor_fixtures[currentplayer].name=="Player4") then
+
+			bx,by=actor_bodies[currentplayer]:getPosition()
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
+				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
 			end
-				
-			if actor_fixtures[currentplayer].name=="Player" then
-				actor_bodies[currentplayer]:setAwake()
-				anchor2:setParent ( actor_sprites[currentplayer] )
-				fitter:insertAnchor ( anchor2 )	
-				--fitter:removeAnchor(anchor)
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
+				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
 			end
+		end
+
+		if actor_fixtures[currentplayer].name=="Player" then
+			actor_bodies[currentplayer]:setAwake()
+			anchor2:setParent ( actor_sprites[currentplayer] )
+			fitter:insertAnchor ( anchor2 )
+			--fitter:removeAnchor(anchor)
+		end
 
 		currentplayer=nil
-		end
-		
-		if panning then
-			--cameramove=cameraprop:moveLoc(gotoX*30,gotoY,1,MOAIEaseType.SOFT)
-			panning=false
-		end
+	end
 
-	end	
+	if panning then
+		--cameramove=cameraprop:moveLoc(gotoX*30,gotoY,1,MOAIEaseType.SOFT)
+		panning=false
+	end
+
+end
 
 
 
@@ -1789,96 +1789,96 @@ end
 
 function point_to_game()
 if MOAIInputMgr.device.pointer then
--- mouse input
+	-- mouse input
 	MOAIInputMgr.device.pointer:setCallback ( pointerCallback )
 	MOAIInputMgr.device.mouseLeft:setCallback ( clickCallback )
 else
 	-- touch input
 	--MOAIDialogIOS.showDialog ( "hi!", "TOUCH INPUT SETUP")
-	MOAIInputMgr.device.touch:setCallback ( 
-			function ( eventType, idx, x, y, tapCount )
-			----print ("Touch event="..eventType)
-		
-		
+	MOAIInputMgr.device.touch:setCallback (
+	function ( eventType, idx, x, y, tapCount )
+		----print ("Touch event="..eventType)
+
+
 		-- pinchzoom
-			if pinching then
-			
-				if idx==0 then 
-				pointer1x=x 
+		if pinching then
+
+			if idx==0 then
+				pointer1x=x
 				pointer1y=y
-				end
-				if idx==1 then
+			end
+			if idx==1 then
 				pointer2x=x
 				pointer2y=y
-				end
-			
-				if pinchstart and idx==1 then
+			end
+
+			if pinchstart and idx==1 then
 				----print ("pointer2x="..pointer2x.." pointer1x="..pointer1x)
 				start_width=pointer2x-pointer1x
-				start_height=pointer2y-pointer1y			
+				start_height=pointer2y-pointer1y
 				start_distance=math.sqrt(start_width*start_width+start_height*start_height)
 				old_zoomscale=zoomscale
 				----print ("Set start_distance to "..start_distance)
 				pinchstart=false
-				end
-				
+			end
+
 			if pinchstart==false then
-					width=pointer2x-pointer1x
-					height=pointer2y-pointer1y
-					distance=math.sqrt(width*width+height*height)
-					diffX=distance-start_distance
-					diffX=diffX/20
-					zoomscale=old_zoomscale-diffX
-					
-					if zoomscale<minzoomscale then zoomscale=minzoomscale end
-					if zoomscale>maxzoomscale then zoomscale=maxzoomscale end
-					
-					fitter:setMin(1*zoomscale)
+				width=pointer2x-pointer1x
+				height=pointer2y-pointer1y
+				distance=math.sqrt(width*width+height*height)
+				diffX=distance-start_distance
+				diffX=diffX/20
+				zoomscale=old_zoomscale-diffX
+
+				if zoomscale<minzoomscale then zoomscale=minzoomscale end
+				if zoomscale>maxzoomscale then zoomscale=maxzoomscale end
+
+				fitter:setMin(1*zoomscale)
 			end
-				
-			end
-		
-			if idx==0 and eventType == MOAITouchSensor.TOUCH_DOWN then
+
+		end
+
+		if idx==0 and eventType == MOAITouchSensor.TOUCH_DOWN then
 			----print(" 1st finger down ")
 			if pinching~=true then
 				pointerCallback ( x, y )
 				clickCallback ( true )
 			end
-			end
-			
-			if idx==0 and eventType == MOAITouchSensor.TOUCH_UP then
+		end
+
+		if idx==0 and eventType == MOAITouchSensor.TOUCH_UP then
 			----print(" 1st finger up ")
 			pinching=false
 			if pinching~=true then
 				--pointerCallback ( x, y )
 				clickCallback ( false )
 			end
-			end
-			
-			if idx==0 and eventType == MOAITouchSensor.TOUCH_MOVE then
+		end
+
+		if idx==0 and eventType == MOAITouchSensor.TOUCH_MOVE then
 			----print(" 1st finger moving ")
 
 			if pinching~=true then
 				pointerCallback ( x, y )
 			end
-			end
-			
-			if idx==1 and eventType == MOAITouchSensor.TOUCH_DOWN then
+		end
+
+		if idx==1 and eventType == MOAITouchSensor.TOUCH_DOWN then
 			----print("  2nd finger down ")
 			pinchstart=true
 			pinching=true
-			end
-		
-			if idx==1 and eventType == MOAITouchSensor.TOUCH_MOVE then
+		end
+
+		if idx==1 and eventType == MOAITouchSensor.TOUCH_MOVE then
 			----print(" 2nd finger moving ")
 			pinching=true
-			end
-			
-			if idx==1 and eventType == MOAITouchSensor.TOUCH_UP then
+		end
+
+		if idx==1 and eventType == MOAITouchSensor.TOUCH_UP then
 			----print(" 2nd finger up ")
 			pinchstart=false
 			pinching=false
-			end		
+		end
 	end
 	)
 end
@@ -1887,102 +1887,102 @@ end
 end
 
 function onCollide ( event, fixtureA, fixtureB, arbiter )
-	if event == MOAIBox2DArbiter.BEGIN then	
-		if fixtureA.name and fixtureB.name then
+if event == MOAIBox2DArbiter.BEGIN then
+	if fixtureA.name and fixtureB.name then
 		----print( fixtureA.userdata.." "..fixtureA.name.." collided with " .. fixtureB.userdata.." "..fixtureB.name)
-		
-			if ((fixtureB.name=="Box" or fixtureB.name=="Triangle" or fixtureB.name=="Circle" or fixtureB.name=="Wall") and (fixtureA.name=="Player" or fixtureA.name=="Player1" or fixtureA.name=="Player2" or fixtureA.name=="Player3")) or 
-			((fixtureB.name=="Box" or fixtureB.name=="Triangle"  or fixtureB.name=="Circle") and (fixtureA.name=="Box" or fixtureA.name=="Triangle" or fixtureA.name=="Circle" or fixtureA.name=="Wall"))
-			then 
-					collisionx,collisiony= fixtureB:getBody():getWorldCenter()
 
-					fixtureB.health=fixtureB.health-math.abs(fixtureB:getBody():getLinearVelocity()*10)
-					------print ("Health="..fixtureB.health)
-					if fixtureB.health<50 then
-						actor_sprites[fixtureB.userdata]:setIndex(2)
-					end
-			
-					if fixtureB.health<0 then
-						layer:removeProp ( actor_sprites[fixtureB.userdata] )
+		if ((fixtureB.name=="Box" or fixtureB.name=="Triangle" or fixtureB.name=="Circle" or fixtureB.name=="Wall") and (fixtureA.name=="Player" or fixtureA.name=="Player1" or fixtureA.name=="Player2" or fixtureA.name=="Player3")) or
+		((fixtureB.name=="Box" or fixtureB.name=="Triangle"  or fixtureB.name=="Circle") and (fixtureA.name=="Box" or fixtureA.name=="Triangle" or fixtureA.name=="Circle" or fixtureA.name=="Wall"))
+		then
+			collisionx,collisiony= fixtureB:getBody():getWorldCenter()
 
-						explode(collisionx,collisiony,actor_fixtures[fixtureB.userdata].particletexture,actor_fixtures[fixtureB.userdata].width,actor_fixtures[fixtureB.userdata].height)
-						smoke(collisionx,collisiony,actor_fixtures[fixtureB.userdata].smoketexture,actor_fixtures[fixtureB.userdata].width,actor_fixtures[fixtureB.userdata].height)
-						popscore(collisionx,collisiony,fixtureB.points)
-						if soundon then 
-							sound3:play()
-						end					
-				
-						fixtureB:getBody():destroy()					
-						end						
-					end
-		
-		-- treasure collision
-		
-		
-			if ((fixtureB.name=="Treasure") and (fixtureA.name=="Player" or fixtureA.name=="Player1" or fixtureA.name=="Player2"  or fixtureA.name=="Player3"))
-			then 					
-						layer:removeProp ( actor_sprites[fixtureB.userdata] )
-
-						confetti(collisionx,collisiony,actor_fixtures[fixtureB.userdata].particletexture,actor_fixtures[fixtureB.userdata].width,actor_fixtures[fixtureB.userdata].height)
-						popscore(collisionx,collisiony,fixtureB.points)
-						if soundon then 
-							sound3:play()
-						end					
-				
-						fixtureB:getBody():destroy()										
-			end
-			
-						if ((fixtureA.name=="Treasure") and (fixtureB.name=="Player" or fixtureB.name=="Player1" or fixtureB.name=="Player2" or fixtureB.name=="Player3"))
-			then 
-					collisionx,collisiony= fixtureA:getBody():getWorldCenter()
-
-					fixtureA.health=fixtureA.health-math.abs(fixtureA:getBody():getLinearVelocity()*10)
-					------print ("Health="..fixtureB.health)
-					if fixtureA.health<50 then
-						actor_sprites[fixtureA.userdata]:setIndex(2)
-					end
-			
-					if fixtureA.health<0 then
-						layer:removeProp ( actor_sprites[fixtureA.userdata] )
-
-						confetti(collisionx,collisiony,actor_fixtures[fixtureA.userdata].particletexture,actor_fixtures[fixtureA.userdata].width,actor_fixtures[fixtureA.userdata].height)
-						popscore(collisionx,collisiony,fixtureA.points)
-						if soundon then 
-							sound3:play()
-						end					
-				
-						fixtureA:getBody():destroy()					
-						end						
+			fixtureB.health=fixtureB.health-math.abs(fixtureB:getBody():getLinearVelocity()*10)
+			------print ("Health="..fixtureB.health)
+			if fixtureB.health<50 then
+				actor_sprites[fixtureB.userdata]:setIndex(2)
 			end
 
+			if fixtureB.health<0 then
+				layer:removeProp ( actor_sprites[fixtureB.userdata] )
+
+				explode(collisionx,collisiony,actor_fixtures[fixtureB.userdata].particletexture,actor_fixtures[fixtureB.userdata].width,actor_fixtures[fixtureB.userdata].height)
+				smoke(collisionx,collisiony,actor_fixtures[fixtureB.userdata].smoketexture,actor_fixtures[fixtureB.userdata].width,actor_fixtures[fixtureB.userdata].height)
+				popscore(collisionx,collisiony,fixtureB.points)
+				if soundon then
+					sound3:play()
+				end
+
+				fixtureB:getBody():destroy()
+			end
 		end
+
+		-- treasure collision
+
+
+		if ((fixtureB.name=="Treasure") and (fixtureA.name=="Player" or fixtureA.name=="Player1" or fixtureA.name=="Player2"  or fixtureA.name=="Player3"))
+		then
+			layer:removeProp ( actor_sprites[fixtureB.userdata] )
+
+			confetti(collisionx,collisiony,actor_fixtures[fixtureB.userdata].particletexture,actor_fixtures[fixtureB.userdata].width,actor_fixtures[fixtureB.userdata].height)
+			popscore(collisionx,collisiony,fixtureB.points)
+			if soundon then
+				sound3:play()
+			end
+
+			fixtureB:getBody():destroy()
+		end
+
+		if ((fixtureA.name=="Treasure") and (fixtureB.name=="Player" or fixtureB.name=="Player1" or fixtureB.name=="Player2" or fixtureB.name=="Player3"))
+		then
+			collisionx,collisiony= fixtureA:getBody():getWorldCenter()
+
+			fixtureA.health=fixtureA.health-math.abs(fixtureA:getBody():getLinearVelocity()*10)
+			------print ("Health="..fixtureB.health)
+			if fixtureA.health<50 then
+				actor_sprites[fixtureA.userdata]:setIndex(2)
+			end
+
+			if fixtureA.health<0 then
+				layer:removeProp ( actor_sprites[fixtureA.userdata] )
+
+				confetti(collisionx,collisiony,actor_fixtures[fixtureA.userdata].particletexture,actor_fixtures[fixtureA.userdata].width,actor_fixtures[fixtureA.userdata].height)
+				popscore(collisionx,collisiony,fixtureA.points)
+				if soundon then
+					sound3:play()
+				end
+
+				fixtureA:getBody():destroy()
+			end
+		end
+
 	end
-
-	
-
-	if event == MOAIBox2DArbiter.END then
-
-	
-
-	end
-
-	
-
-	if event == MOAIBox2DArbiter.PRE_SOLVE then
-
-	
+end
 
 
 
-	end
-
-	
-
-	if event == MOAIBox2DArbiter.POST_SOLVE then
+if event == MOAIBox2DArbiter.END then
 
 
 
-	end
+end
+
+
+
+if event == MOAIBox2DArbiter.PRE_SOLVE then
+
+
+
+
+
+end
+
+
+
+if event == MOAIBox2DArbiter.POST_SOLVE then
+
+
+
+end
 
 end
 
@@ -2000,117 +2000,117 @@ density=0+density
 restitution=0+restitution
 friction=0+friction
 actor_sprites[c] = MOAIProp2D.new ()
-	
-if bodytype=="Dynamic" then 
-		actor_bodies[c] = world:addBody ( MOAIBox2DBody.DYNAMIC )
-		actor_bodies[c].boxtype="Dynamic"
-end
-if bodytype=="Static" then 
-		actor_bodies[c] = world:addBody ( MOAIBox2DBody.STATIC )
-		actor_bodies[c].boxtype="Static"
-end
-		actor_bodies[c]:setTransform(x,y,0)
-		actor_bodies[c].start_x=x
-		actor_bodies[c].start_y=y
-		actor_bodies[c].userdata=c
-	
-if actorname=="Circle" then 
-		tileLib = MOAITileDeck2D.new ()
-		tileLib:setTexture ( texture_image )
-		tileLib:setSize ( 2,1 )
-		tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-		actor_sprites[c]:setDeck ( tileLib )
-		actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
-end
 
-if (actorname=="Player" or actorname=="Player1" or actorname=="Player2" or actorname=="Player3") then 
-		tileLib = MOAITileDeck2D.new ()
-		tileLib:setTexture ( texture_image )
-		tileLib:setSize ( 2,1 )
-		tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-		actor_sprites[c]:setDeck ( tileLib )
-		actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
+if bodytype=="Dynamic" then
+	actor_bodies[c] = world:addBody ( MOAIBox2DBody.DYNAMIC )
+	actor_bodies[c].boxtype="Dynamic"
+end
+if bodytype=="Static" then
+	actor_bodies[c] = world:addBody ( MOAIBox2DBody.STATIC )
+	actor_bodies[c].boxtype="Static"
+end
+actor_bodies[c]:setTransform(x,y,0)
+actor_bodies[c].start_x=x
+actor_bodies[c].start_y=y
+actor_bodies[c].userdata=c
+
+if actorname=="Circle" then
+	tileLib = MOAITileDeck2D.new ()
+	tileLib:setTexture ( texture_image )
+	tileLib:setSize ( 2,1 )
+	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+	actor_sprites[c]:setDeck ( tileLib )
+	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
 end
 
-if (actorname=="Player4") then 
-		tileLib = MOAITileDeck2D.new ()
-		tileLib:setTexture ( texture_image )
-		tileLib:setSize ( 2,1 )
-		tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-		actor_sprites[c]:setDeck ( tileLib )
-		actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
+if (actorname=="Player" or actorname=="Player1" or actorname=="Player2" or actorname=="Player3") then
+	tileLib = MOAITileDeck2D.new ()
+	tileLib:setTexture ( texture_image )
+	tileLib:setSize ( 2,1 )
+	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+	actor_sprites[c]:setDeck ( tileLib )
+	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
 end
 
-if (actorname=="Player5") then 
-		tileLib = MOAITileDeck2D.new ()
-		tileLib:setTexture ( texture_image )
-		tileLib:setSize ( 2,1 )
-		tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-		actor_sprites[c]:setDeck ( tileLib )
-		actor_sprites[c]:setPriority(100)
-		actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
+if (actorname=="Player4") then
+	tileLib = MOAITileDeck2D.new ()
+	tileLib:setTexture ( texture_image )
+	tileLib:setSize ( 2,1 )
+	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+	actor_sprites[c]:setDeck ( tileLib )
+	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
 end
 
-if actorname=="Box" then 
-	
-		tileLib = MOAITileDeck2D.new ()
-		tileLib:setTexture ( texture_image )
-		tileLib:setSize ( 2,1 )
-		tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-		actor_sprites[c]:setDeck ( tileLib ) 
-		actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)	
+if (actorname=="Player5") then
+	tileLib = MOAITileDeck2D.new ()
+	tileLib:setTexture ( texture_image )
+	tileLib:setSize ( 2,1 )
+	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+	actor_sprites[c]:setDeck ( tileLib )
+	actor_sprites[c]:setPriority(100)
+	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
 end
 
-if actorname=="Treasure" then 
-	
-		tileLib = MOAITileDeck2D.new ()
-		tileLib:setTexture ( texture_image )
-		tileLib:setSize ( 2,1 )
-		tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-		actor_sprites[c]:setDeck ( tileLib ) 
-		actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)	
+if actorname=="Box" then
+
+	tileLib = MOAITileDeck2D.new ()
+	tileLib:setTexture ( texture_image )
+	tileLib:setSize ( 2,1 )
+	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+	actor_sprites[c]:setDeck ( tileLib )
+	actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)
 end
 
-if actorname=="Wall" then 
+if actorname=="Treasure" then
 
-		texture = MOAIGfxQuad2D.new ()
-		texture:setTexture ( texture_image )
-		texture:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-		actor_sprites[c]:setDeck ( texture ) 
-		actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)		
+	tileLib = MOAITileDeck2D.new ()
+	tileLib:setTexture ( texture_image )
+	tileLib:setSize ( 2,1 )
+	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+	actor_sprites[c]:setDeck ( tileLib )
+	actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)
 end
 
-if actorname=="Ground" then 
-		offset=0.4
-		texture = MOAIGfxQuad2D.new ()
-		texture:setTexture ( texture_image )
-		texture:setRect ( width/2*-1,height/2*-1+offset,width/2,height/2+offset)
+if actorname=="Wall" then
 
-		actor_sprites[c]:setDeck ( texture ) 
-		actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)		
+	texture = MOAIGfxQuad2D.new ()
+	texture:setTexture ( texture_image )
+	texture:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+	actor_sprites[c]:setDeck ( texture )
+	actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)
 end
 
-if actorname=="Platform" then 
-		offset=0.2
-		texture = MOAIGfxQuad2D.new ()
-		texture:setTexture ( texture_image )
-		texture:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+if actorname=="Ground" then
+	offset=0.4
+	texture = MOAIGfxQuad2D.new ()
+	texture:setTexture ( texture_image )
+	texture:setRect ( width/2*-1,height/2*-1+offset,width/2,height/2+offset)
 
-		actor_sprites[c]:setDeck ( texture )
-		--actor_sprites[c]:setLoc(0,offset)
-		xscale,yscale=actor_sprites[c]:getScl()
-		actor_sprites[c]:setScl(xscale,yscale+offset*8)
-		actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)		
+	actor_sprites[c]:setDeck ( texture )
+	actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)
 end
 
-if actorname=="Triangle" then 
-		tileLib = MOAITileDeck2D.new ()
-		tileLib:setTexture ( texture_image )
-		tileLib:setSize ( 2,1 )
-		tileLib:setRect ( width*-1,height*-1,width,height)
-		actor_sprites[c]:setDeck ( tileLib )
-		t = { 1*width,-1*width,0*width,1*width,-1*width,-1*width }
-		actor_fixtures[c] = actor_bodies[c]:addPolygon (t)
+if actorname=="Platform" then
+	offset=0.2
+	texture = MOAIGfxQuad2D.new ()
+	texture:setTexture ( texture_image )
+	texture:setRect ( width/2*-1,height/2*-1,width/2,height/2)
+
+	actor_sprites[c]:setDeck ( texture )
+	--actor_sprites[c]:setLoc(0,offset)
+	xscale,yscale=actor_sprites[c]:getScl()
+	actor_sprites[c]:setScl(xscale,yscale+offset*8)
+	actor_fixtures[c] = actor_bodies[c]:addRect ( width/2*-1,height/2*-1,width/2,height/2)
+end
+
+if actorname=="Triangle" then
+	tileLib = MOAITileDeck2D.new ()
+	tileLib:setTexture ( texture_image )
+	tileLib:setSize ( 2,1 )
+	tileLib:setRect ( width*-1,height*-1,width,height)
+	actor_sprites[c]:setDeck ( tileLib )
+	t = { 1*width,-1*width,0*width,1*width,-1*width,-1*width }
+	actor_fixtures[c] = actor_bodies[c]:addPolygon (t)
 end
 
 actor_fixtures[c]:setDensity ( density )
@@ -2128,15 +2128,15 @@ actor_fixtures[c].height=height
 actor_fixtures[c].particletexture=particle_texture
 actor_fixtures[c].smoketexture=smoke_texture
 
-actor_bodies[c]:resetMassData()		
+actor_bodies[c]:resetMassData()
 actor_fixtures[c]:setCollisionHandler ( onCollide, MOAIBox2DArbiter.BEGIN + MOAIBox2DArbiter.END, 0x03 )
 actor_sprites[c]:setParent ( actor_bodies[c] )
 actor_sprites[c].texture=texture_filename
-	
+
 if welded=="True" then
-		fixedbody = world:addBody ( MOAIBox2DBody.STATIC )
-		fixed_fixture = fixedbody:addRect ( -1999,-0.1,-2000,0.1)
-		actor_joints[c]=world:addWeldJoint ( fixedbody,actor_bodies[c],x,y)
+	fixedbody = world:addBody ( MOAIBox2DBody.STATIC )
+	fixed_fixture = fixedbody:addRect ( -1999,-0.1,-2000,0.1)
+	actor_joints[c]=world:addWeldJoint ( fixedbody,actor_bodies[c],x,y)
 end
 
 layer:insertProp ( actor_sprites[c] )
@@ -2177,7 +2177,7 @@ add_actor(5,-1,5,0.5,0.02,0.3,0,"Platform","","Static","platform1.png",particlet
 add_actor(-2,-5,0.75,0.75,0.5,0.3,0.2,"Player5","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000)
 mainplayer=c-1
 anchor2:setParent ( actor_sprites[mainplayer] )
-fitter:insertAnchor ( anchor2 )	
+fitter:insertAnchor ( anchor2 )
 
 add_actor(-5,-5,1,1,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
 add_actor(-8,-5,2,2,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000)
@@ -2185,17 +2185,17 @@ add_actor(0,-5,1.5,1.5,0.5,0.3,0.2,"Player3","","Dynamic","face_circle_tiled4.pn
 add_actor(2,-5,1.2,1.2,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled5.png",particletexture1,smokeparticletexture1,"False",2000)
 
 -- add a load of boxes
-for x=1,10,2 do 
-for y=1,10,2 do 
-add_actor(5+x,y,x/5,y/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",100,10)
-end
+for x=1,10,2 do
+	for y=1,10,2 do
+		add_actor(5+x,y,x/5,y/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",100,10)
+	end
 end
 
 -- add a load of boxes
-for x=1,10,2 do 
-for y=1,10,2 do 
-add_actor(5+x,y,x/5,y/5,0.5,0.5,0.1,"Box","","Dynamic","face_box_tiled2.png",particletexture1,smokeparticletexture2,"False",500,10)
-end
+for x=1,10,2 do
+	for y=1,10,2 do
+		add_actor(5+x,y,x/5,y/5,0.5,0.5,0.1,"Box","","Dynamic","face_box_tiled2.png",particletexture1,smokeparticletexture2,"False",500,10)
+	end
 end
 
 --add some treasure
@@ -2263,7 +2263,7 @@ button_game_right:setLoc(100,screen_height/2*-1+35)
 layer_hud:insertProp ( button_game_right)
 button_game_left:setLoc(-100,screen_height/2*-1+35)
 layer_hud:insertProp ( button_game_left )
-	
+
 -- setup camera
 camera = MOAICamera2D.new ()
 
@@ -2273,7 +2273,7 @@ fitter:setViewport ( viewport )
 fitter:setCamera ( camera )
 fitter:setMin(1*zoomscale)
 --fitter:setFitScale(2)
-fitter:setDamper(0.4)	
+fitter:setDamper(0.4)
 --fitter:setBounds ( boundaryleft,boundarybottom,boundaryright,boundarytop)
 
 
@@ -2286,17 +2286,17 @@ tileLib:setRect (-1,-1,1,1)
 --cameraprop:setDeck ( tileLib )
 layer:insertProp(cameraprop)
 
-if usecamerabody==true then 
-camerabody = world:addBody ( MOAIBox2DBody.KINEMATIC)
-fixture = camerabody:addCircle( 0,0,0.1)
-fixture:setFriction ( 0 )
-fixture:setRestitution ( 0)
---fixture:setFilter ( 0x02 ,0x02)
-fixture.userdata=-1
-camerabody:setTransform(0,-2,0)
-camerabody:resetMassData()
+if usecamerabody==true then
+	camerabody = world:addBody ( MOAIBox2DBody.KINEMATIC)
+	fixture = camerabody:addCircle( 0,0,0.1)
+	fixture:setFriction ( 0 )
+	fixture:setRestitution ( 0)
+	--fixture:setFilter ( 0x02 ,0x02)
+	fixture.userdata=-1
+	camerabody:setTransform(0,-2,0)
+	camerabody:resetMassData()
 
-cameraprop:setParent(camerabody)
+	cameraprop:setParent(camerabody)
 end
 
 cameraprop:setLoc(0,camerapropy)
@@ -2331,11 +2331,11 @@ function getFile(filename,url)
 
 directory=MOAIEnvironment.documentDirectory
 if directory~=nil then
-filename=directory.."/"..filename
+	filename=directory.."/"..filename
 end
 if directory==nil then
-directory=""
-filename=filename
+	directory=""
+	filename=filename
 end
 
 gfilename=filename
@@ -2346,47 +2346,31 @@ capture=assert(curl.new());
 local file=assert(io.open(filename, "wb"));
 
 assert(capture:setopt(curl.OPT_WRITEFUNCTION, function (stream, buffer)
-
-	stream:write(buffer)
-
-	return string.len(buffer);
-
+stream:write(buffer)
+return string.len(buffer);
 end));
 
 assert(capture:setopt(curl.OPT_WRITEDATA, file));
-
 assert(capture:setopt(curl.OPT_PROGRESSFUNCTION, function (_, dltotal, dlnow, uptotal, upnow)
-
 end));
 
 assert(capture:setopt(curl.OPT_NOPROGRESS, false));
-
 assert(capture:setopt(curl.OPT_BUFFERSIZE, 5000));
-
 --assert(c:setopt(curl.OPT_HTTPHEADER, "Connection: Keep-Alive", "Accept-Language: en-us"));
-
 assert(capture:setopt(curl.OPT_URL, url));
-
 assert(capture:setopt(curl.OPT_CONNECTTIMEOUT, 45));
-
 --assert(c:perform());
 
-capture:perform({writefunction = function(str) 
-			     end})
+capture:perform({writefunction = function(str)
+end})
 
 assert(capture:close()); -- not necessary, as will be garbage collected soon
-
 s="abcd$%^&*()";
-
 assert(s == assert(curl.unescape(curl.escape(s))));
-
 file:close();
 
-
 filesRemaining=filesRemaining-1
-
 if filesRemaining>0 then downloadFile() end
-
 capture=nil
 end
 
@@ -2475,3 +2459,4 @@ init()
 fadeinSplash()
 loadresources()
 --start_level()
+osbrand=None
