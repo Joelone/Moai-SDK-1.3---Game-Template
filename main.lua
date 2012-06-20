@@ -243,28 +243,28 @@ function loadresources()
 	button_level_exit.name = "button_level_exit"
 
 	gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( assetdirectory.."button6.png" )
+	gfxQuad:setTexture ( assetdirectory.."levelbutton1.png" )
 	gfxQuad:setRect ( -1,-1,1,1 )
 	button_level = MOAIProp2D.new ()
 	button_level:setDeck ( gfxQuad )
 	button_level.name = "button_level"
 
 	gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( assetdirectory.."button7.png" )
+	gfxQuad:setTexture ( assetdirectory.."levelbutton2.png" )
 	gfxQuad:setRect ( -1,-1,1,1 )
 	button_level2 = MOAIProp2D.new ()
 	button_level2:setDeck ( gfxQuad )
 	button_level2.name = "button_level2"
 	
 	gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( assetdirectory.."button8.png" )
+	gfxQuad:setTexture ( assetdirectory.."levelbutton3.png" )
 	gfxQuad:setRect ( -1,-1,1,1 )
 	button_level3 = MOAIProp2D.new ()
 	button_level3:setDeck ( gfxQuad )
 	button_level3.name = "button_level3"
 	
 	gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( assetdirectory.."button8.png" )
+	gfxQuad:setTexture ( assetdirectory.."levelbutton4.png" )
 	gfxQuad:setRect ( -1,-1,1,1 )
 	button_level4 = MOAIProp2D.new ()
 	button_level4:setDeck ( gfxQuad )
@@ -650,7 +650,7 @@ button_level3:setLoc(3,2)
 
 partition_menu:insertProp ( button_level4 )
 layer_menu:insertProp ( button_level4)
-button_level4:setLoc(-5,2)
+button_level4:setLoc(-3,2)
 
 MOAISim.pushRenderPass ( layer_menu )
 
