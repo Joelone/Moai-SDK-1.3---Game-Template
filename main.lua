@@ -250,7 +250,7 @@ function loadresources()
 	button_level.name = "button_level"
 
 	gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( assetdirectory.."button6.png" )
+	gfxQuad:setTexture ( assetdirectory.."button7.png" )
 	gfxQuad:setRect ( -1,-1,1,1 )
 	button_level2 = MOAIProp2D.new ()
 	button_level2:setDeck ( gfxQuad )
