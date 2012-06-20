@@ -2183,7 +2183,7 @@ if level==2 then
 		-- add a load of boxes
 		for x=1,5,1 do 
 			for y=1,5,1 do 
-				add_actor(x,y,1,1,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",100,10)
+				add_actor(x,y,x/5,x/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",500,10)
 			end
 		end
 
