@@ -269,13 +269,6 @@ function loadresources()
 	button_level4 = MOAIProp2D.new ()
 	button_level4:setDeck ( gfxQuad )
 	button_level4.name = "button_level4"
-	
-	gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( assetdirectory.."levelbutton5.png" )
-	gfxQuad:setRect ( -1,-1,1,1 )
-	button_level5 = MOAIProp2D.new ()
-	button_level5:setDeck ( gfxQuad )
-	button_level5.name = "button_level5"
 
 	gfxQuad = MOAIGfxQuad2D.new ()
 	gfxQuad:setTexture ( assetdirectory.."button1.png" )
@@ -449,7 +442,7 @@ function loadresources()
 	-- backgrounds
 
 	update_loading(100)
-	callWithDelay ( 0.1, fadeoutSplash)
+	callWithDelay ( 1, fadeoutSplash)
 end
 
 -- USEFUL FUNCTIONS --
@@ -626,10 +619,6 @@ if down then
 			layer_menu:clear()
 			start_level(4)
 		end
-		if pick.name=="button_level5" then
-			layer_menu:clear()
-			start_level(5)
-		end
 	end
 end
 
@@ -662,10 +651,6 @@ button_level3:setLoc(3,2)
 partition_menu:insertProp ( button_level4 )
 layer_menu:insertProp ( button_level4)
 button_level4:setLoc(-3,2)
-
-partition_menu:insertProp ( button_level5 )
-layer_menu:insertProp ( button_level5)
-button_level5:setLoc(-1,3)
 
 MOAISim.pushRenderPass ( layer_menu )
 
@@ -1570,32 +1555,6 @@ if mousedown==true then
 				actor_bodies[currentplayer]:setAwake()
 			end
 		end
-		if actor_fixtures[currentplayer].name=="Player8" then
-			bx,by=actor_bodies[currentplayer]:getPosition()
-			distance=math.sqrt(math.pow(mouseXdown-mouseX, 2) + math.pow(mouseYdown-mouseY, 2))
-			--print ("distance="..distance)
-			if (distance<2) then 
-				actor_bodies[currentplayer]:setTransform(mouseX,mouseY,0)
-				setx=mouseX
-				sety=mouseY
-				throwx=setx- -15
-				throwy=sety- -5
-			end
-			if (distance>2) then
-				tx = mouseX - -15
-				ty = mouseY - -5
-				radians=math.atan2(ty,tx)
-				setx=math.cos(radians) * 2 + -15
-				sety=math.sin(radians) * 2 + -5
-			    actor_bodies[currentplayer]:setTransform(setx,sety,0)
-				throwx=setx- -15
-				throwy=sety- -5
-			end	
-			
-			actor_bodies[currentplayer].setx=throwx
-			actor_bodies[currentplayer].sety=throwy
-
-		end 
 
 	end
 
@@ -1694,8 +1653,7 @@ if down==true then
 			end
 			if actor_fixtures[mainplayer].name=="Player7" then
 				bx,by=actor_bodies[mainplayer]:getPosition()
-				add_actor(bx,by+0.25,0.25,0.25,0.5,0.3,0.2,"CircleBullet","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",-5,0,1,25)
-
+				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled1.png",particletexture1,smokeparticletexture1,"False",2000,100,0,20)
 			end
 			if actor_fixtures[mainplayer].name=="Player1" then
 				cx,cy=camera:getLoc()
@@ -1726,7 +1684,7 @@ if down==true then
 
 		if pick.name=="button_game_left" then
 			
-			if (actor_fixtures[mainplayer].name=="Player1"  or actor_fixtures[mainplayer].name=="Player2" or actor_fixtures[mainplayer].name=="Player3"  or actor_fixtures[mainplayer].name=="Player4" or actor_fixtures[mainplayer].name=="Player5") then
+			if (actor_fixtures[mainplayer].name=="Player1"  or actor_fixtures[mainplayer].name=="Player2" or actor_fixtures[mainplayer].name=="Player3") then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
@@ -1744,37 +1702,30 @@ if down==true then
 		end
 
 		if pick.name=="button_game_right" then
-			if (actor_fixtures[mainplayer].name=="Player1"  or actor_fixtures[mainplayer].name=="Player2" or actor_fixtures[mainplayer].name=="Player3"  or actor_fixtures[mainplayer].name=="Player4" or actor_fixtures[mainplayer].name=="Player5") then
-				cx,cy=camera:getLoc()
-				bx,by=actor_bodies[mainplayer]:getPosition()
-				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
-				actor_bodies[mainplayer]:applyLinearImpulse ( 1,0,bx,by )
-				anchor2:setParent ( actor_sprites[mainplayer] )
-			end
-			
-			if actor_fixtures[mainplayer].name=="Player7" then
-				cx,cy=camera:getLoc()
-				bx,by=actor_bodies[mainplayer]:getPosition()
-				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
-				actor_bodies[mainplayer]:applyLinearImpulse ( 0.02 )
-				anchor2:setParent ( actor_sprites[mainplayer] )
-			end
+			cx,cy=camera:getLoc()
+			bx,by=actor_bodies[mainplayer]:getPosition()
+			vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
+			actor_bodies[mainplayer]:applyLinearImpulse ( 1,0,bx,by )
+
+			anchor2:setParent ( actor_sprites[mainplayer] )
 
 		end
 	end
 
 	if gamepick then
-		if (gamepick.name=="Player" or gamepick.name=="Player1" or gamepick.name=="Player2" or gamepick.name=="Player3" or gamepick.name=="Player4"  or gamepick.name=="Player5" or gamepick.name=="Player6" or gamepick.name=="Player7" or gamepick.name=="Player8") then
+		if (gamepick.name=="Player" or gamepick.name=="Player1" or gamepick.name=="Player2" or gamepick.name=="Player3" or gamepick.name=="Player4"  or gamepick.name=="Player5" or gamepick.name=="Player6" or gamepick.name=="Player7") then
 			currentplayer=gamepick.userdata
 		end
 	end
 
 	if gamepick==nil then
-		fitter:removeAnchor(anchor2)
-		fitter:insertAnchor ( anchor ) -- add camera anchor  
+		--fitter:removeAnchor(anchor2)
 		cx,cy=camera:getLoc()
+		--cpx,cpy=camerabody:getPosition()
 		cpx,cpy=cameraprop:getLoc()
-		cameraprop:setLoc(cx,cpy)
+		--camerabody:setTransform(cx,cpy,0)
+		--cameraprop:setLoc(cx,cpy)
+		--fitter:insertAnchor(anchor)
 	end
 end
 
@@ -1793,8 +1744,6 @@ if down==false then
 		diffx=x-lastX
 		diffx=diffx/16
 		gotoX=cx-diffx
-		
-
 
 		--print ("cx="..cx.." lastx="..lastX.." x="..x.." Gotox="..gotoX)
 
@@ -1811,7 +1760,16 @@ if down==false then
 
 	if currentplayer then
 		if (actor_fixtures[currentplayer].name=="Player1") then
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
+			end
+
+			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
+				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
+			end
 			actor_joints[currentplayer]:destroy()
+
 			actor_bodies[currentplayer]:setAwake()
 			actor_sprites[currentplayer]:setIndex(2)
 			anchor2:setParent ( actor_sprites[currentplayer] )
@@ -1901,18 +1859,6 @@ if down==false then
 
 		end
 		
-		if (actor_fixtures[currentplayer].name=="Player8") then
-
-			bx,by=actor_bodies[currentplayer]:getPosition()
-			    smoke(bx,by,smokeparticletexture1,1,1)		
-				layer:removeProp ( actor_sprites[currentplayer] )
-				actor_fixtures[currentplayer]:getBody():destroy()
-				add_actor(bx,by+0.25,0.75,0.75,0.5,0.3,0.2,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"False",2000,0,(actor_bodies[currentplayer].setx)*-10,(actor_bodies[currentplayer].sety)*-10)
-				anchor2:setParent ( actor_sprites[c-1] )
-				fitter:insertAnchor ( anchor2 )
-				fitter:removeAnchor(anchor)
-		end
-		
 
 		if actor_fixtures[currentplayer].name=="Player" then
 			actor_bodies[currentplayer]:setAwake()
@@ -1927,7 +1873,6 @@ if down==false then
 	if panning then
 		--cameramove=cameraprop:moveLoc(gotoX*30,gotoY,1,MOAIEaseType.SOFT)
 		panning=false
-		
 	end
 
 end
@@ -2038,36 +1983,17 @@ end
 function onCollide ( event, fixtureA, fixtureB, arbiter )
 if event == MOAIBox2DArbiter.BEGIN then
 	if fixtureA.name and fixtureB.name then
-		--print( fixtureA.userdata.." "..fixtureA.name.." collided with " .. fixtureB.userdata.." "..fixtureB.name)
+		----print( fixtureA.userdata.." "..fixtureA.name.." collided with " .. fixtureB.userdata.." "..fixtureB.name)
 
-		if ((fixtureB.name=="Box" or fixtureB.name=="Triangle" or fixtureB.name=="Circle" or fixtureB.name=="Wall") and (fixtureA.name=="Player" or fixtureA.name=="Player1" or fixtureA.name=="Player2" or fixtureA.name=="Player3" or fixtureA.name=="Player4" or fixtureA.name=="Player5" or fixtureA.name=="Player6" or fixtureA.name=="Player7" or fixtureA.name=="Player8")) or
-		
-		((fixtureB.name=="Box" or fixtureB.name=="Triangle"  or fixtureB.name=="Circle" or fixtureB.name=="CircleBullet" or fixtureB.name=="Wall" or fixtureB.name=="Ground") and (fixtureA.name=="Box" or fixtureA.name=="Triangle" or fixtureA.name=="Circle"  or fixtureA.name=="CircleBullet" or fixtureA.name=="Wall" or fixtureA.name=="Ground")) or
-		
-		((fixtureA.name=="Box" or fixtureA.name=="Triangle" or fixtureA.name=="Circle" or fixtureA.name=="Wall") and (fixtureB.name=="Player" or fixtureB.name=="Player1" or fixtureB.name=="Player2" or fixtureB.name=="Player3" or fixtureB.name=="Player4" or fixtureB.name=="Player5" or fixtureB.name=="Player6" or fixtureB.name=="Player7" or fixtureB.name=="Player8"))
-		
+		if ((fixtureB.name=="Box" or fixtureB.name=="Triangle" or fixtureB.name=="Circle" or fixtureB.name=="Wall") and (fixtureA.name=="Player" or fixtureA.name=="Player1" or fixtureA.name=="Player2" or fixtureA.name=="Player3" or fixtureA.name=="Player4")) or
+		((fixtureB.name=="Box" or fixtureB.name=="Triangle"  or fixtureB.name=="Circle") and (fixtureA.name=="Box" or fixtureA.name=="Triangle" or fixtureA.name=="Circle" or fixtureA.name=="Wall"))
 		then
 			collisionx,collisiony= fixtureB:getBody():getWorldCenter()
-			damage=math.abs(fixtureB:getBody():getLinearVelocity()*10)-math.abs(fixtureA:getBody():getLinearVelocity()*10)
-			--damage=damage*10
-			fixtureB.health=fixtureB.health-damage
-			fixtureA.health=fixtureA.health-damage
-			
-			--print ("damage="..damage.." ahealth="..fixtureA.health.." bhealth="..fixtureB.health)
-			
 
-
+			fixtureB.health=fixtureB.health-math.abs(fixtureB:getBody():getLinearVelocity()*10)
+			------print ("Health="..fixtureB.health)
 			if fixtureB.health<50 then
 				actor_sprites[fixtureB.userdata]:setIndex(2)
-				if actor_joints[fixtureB.userdata]~=nil then
-					actor_joints[fixtureB.userdata]:destroy()
-				end
-			end
-			if fixtureA.health<50 then
-				actor_sprites[fixtureA.userdata]:setIndex(2)
-				if actor_joints[fixtureA.userdata]~=nil then
-					actor_joints[fixtureA.userdata]:destroy()
-				end
 			end
 			
 
@@ -2076,32 +2002,13 @@ if event == MOAIBox2DArbiter.BEGIN then
 
 				explode(collisionx,collisiony,actor_fixtures[fixtureB.userdata].particletexture,actor_fixtures[fixtureB.userdata].width,actor_fixtures[fixtureB.userdata].height)
 				smoke(collisionx,collisiony,actor_fixtures[fixtureB.userdata].smoketexture,actor_fixtures[fixtureB.userdata].width,actor_fixtures[fixtureB.userdata].height)
-				if fixtureB.points>0 then
-					popscore(collisionx,collisiony,fixtureB.points)
-				end
+				popscore(collisionx,collisiony,fixtureB.points)
 				if soundon then
 					sound3:play()
 				end
 
 				fixtureB:getBody():destroy()
-				fixtureB.alive="No"
 			end
-			if fixtureA.health<0 then
-				layer:removeProp ( actor_sprites[fixtureA.userdata] )
-
-				explode(collisionx,collisiony,actor_fixtures[fixtureA.userdata].particletexture,actor_fixtures[fixtureA.userdata].width,actor_fixtures[fixtureA.userdata].height)
-				smoke(collisionx,collisiony,actor_fixtures[fixtureA.userdata].smoketexture,actor_fixtures[fixtureA.userdata].width,actor_fixtures[fixtureA.userdata].height)
-				if fixtureA.points>0 then
-					popscore(collisionx,collisiony,fixtureA.points)
-				end
-				if soundon then
-					sound3:play()
-				end
-
-				fixtureA:getBody():destroy()
-				fixtureA.alive="No"
-			end
-
 		end
 
 		-- treasure collision
@@ -2145,27 +2052,33 @@ if event == MOAIBox2DArbiter.BEGIN then
 
 	end
 end
+
+
+
 if event == MOAIBox2DArbiter.END then
-end
-if event == MOAIBox2DArbiter.PRE_SOLVE then
-end
-if event == MOAIBox2DArbiter.POST_SOLVE then
-end
+
+
+
 end
 
-function actionmove()
-	for loop=1,c,1 do
-	if (actor_fixtures[loop]~=nil and actor_fixtures[loop].alive~="No") then
-		 if (actor_fixtures[loop].name=="Player") then
-		 random=math.random()*100 -- 50% chance of jumping
-				if (actor_bodies[loop]~=nil and random>50) then
-					bx,by=actor_bodies[loop]:getPosition()
-					actor_bodies[loop]:applyLinearImpulse ( 0,1,bx,by )
-					print ("Apply Pulse on "..10)
-				end
-			end
-		end
-	end
+
+
+if event == MOAIBox2DArbiter.PRE_SOLVE then
+
+
+
+
+
+end
+
+
+
+if event == MOAIBox2DArbiter.POST_SOLVE then
+
+
+
+end
+
 end
 
 function add_actor(x,y,width,height,density,friction,restitution,actorname,treasure,bodytype,texture_image,particle_texture,smoke_texture,welded,health,points,velocityx,velocityy)
@@ -2203,16 +2116,6 @@ if actorname=="Circle" then
 	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
 	actor_sprites[c]:setDeck ( tileLib )
 	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
-end
-
-if actorname=="CircleBullet" then
-	tileLib = MOAITileDeck2D.new ()
-	tileLib:setTexture ( texture_image )
-	tileLib:setSize ( 2,1 )
-	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-	actor_sprites[c]:setDeck ( tileLib )
-	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
-	--actor_bodies[c]:setBullet(true)
 end
 
 if (actorname=="Player" or actorname=="Player1" or actorname=="Player2" or actorname=="Player3") then
@@ -2261,17 +2164,7 @@ if (actorname=="Player7") then
 	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
 	actor_sprites[c]:setDeck ( tileLib )
 	actor_sprites[c]:setPriority(100)
-	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
-		
-end
-
-if (actorname=="Player8") then
-	tileLib = MOAITileDeck2D.new ()
-	tileLib:setTexture ( texture_image )
-	tileLib:setSize ( 2,1 )
-	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
-	actor_sprites[c]:setDeck ( tileLib )
-	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
+	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)	
 end
 
 if actorname=="Box" then
@@ -2377,9 +2270,11 @@ function loadlevel(level)
 
 setupRotationSensor()
 
+ 
+
 if level==1 then
 
-		--background layer
+ --background layer
         layer_back:setParallax ( 0.5,1 )
         sprite_background_far:setLoc(2,2)
         layer_back:insertProp ( sprite_background_far)
@@ -2473,25 +2368,9 @@ if level==3 then
 				add_actor(x-2,y,x/5,x/5,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled2.png",particletexture2,smokeparticletexture2,"False",80,10)
 			end
 		end
-		
+
 end
 if level==4 then
-
-	
-	mainThread = MOAIThread.new ()
-	mainThread:run ( 
-		function ()
-			actiontimer=0
-			while not gameOver do
-			coroutine.yield ()
-				if (actiontimer>200) then
-					actionmove()
-					actiontimer=0
-				end
-				actiontimer=actiontimer+1
-			end
-		end 
-	)
 				
 		--add walls
         add_actor(0,-10,90,5,0.02,0.3,0,"Wall","","Static","particle2.png",particletexture1,smokeparticletexture1,"False",10000000)
@@ -2506,81 +2385,24 @@ if level==4 then
         fitter:insertAnchor ( anchor2 )
 		
 		-- add a load of boxes
-		for x=1,6,1 do 
-			for y=1,4,1 do 
-				add_actor(x,y-2,1,1,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"True",50,10)
+		for x=1,3,1 do 
+			for y=1,3,1 do 
+				add_actor(x,y,x/5,x/5,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",50,10)
 			end
 		end
 		-- add a load of boxes
 		for x=1,3,1 do 
 			for y=1,3,1 do 
-				add_actor(x-5,y-2,1,1,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled3.png",particletexture3,smokeparticletexture3,"True",50,10)
+				add_actor(x-2,y,x/5,x/5,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled3.png",particletexture2,smokeparticletexture2,"False",80,10)
 			end
 		end
-		
-		-- tweak camera
-		zoomscale=10
-		fitter:setMin(1*zoomscale)
-		anchor2:setRect ( -2,-2,2,10) -- offset camera
 
 end
-
-if level==5 then
-
-		--background layer
-        layer_back:setParallax ( 0.5,1 )
-        sprite_background_far:setLoc(2,2)
-        layer_back:insertProp ( sprite_background_far)
-        layer_med:setParallax ( 0.75,1 )
-        sprite_background_med:setLoc(0,-2.5)
-        layer_med:insertProp ( sprite_background_med)
-        sprite_background_med1:setLoc(10,-2.5)
-        layer_med:insertProp ( sprite_background_med1)
-        sprite_background_med2:setLoc(20,-2.5)
-        layer_med:insertProp ( sprite_background_med2)
-        layer_close:setParallax ( 0.95,1 )
-        sprite_background_close:setLoc(10,0)
-        layer_close:insertProp ( sprite_background_close)
-				
-		--add walls
-        add_actor(0,-10,90,5,0.02,0.3,0,"Ground","","Static","ground.png",particletexture1,smokeparticletexture1,"False",10000000)
-        --add_actor(0,10,90,5,0.02,0.3,0,"Wall","","Static","particle2.png",particletexture1,smokeparticletexture1,"False",10000000)	
-		--add_actor(-10,0,5,90,0.02,0.3,0,"Wall","","Static","particle2.png",particletexture1,smokeparticletexture1,"False",10000000)	
-		--add_actor(10,0,5,90,0.02,0.3,0,"Wall","","Static","particle2.png",particletexture1,smokeparticletexture1,"False",10000000)
-
-        --add some player objects
-		--x,y,width,height,density,friction,restitution,
-		
-        add_actor(-15,-5,0.75,0.75,0.9,0.5,0.1,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"True",2000)
-        mainplayer=c-1
-		
-		-- add a load of boxes
-		for x=1,3,1 do 
-			for y=1,3,1 do 
-				add_actor(x+10,y+10,1,1,0.1,0.7,0.1,"Box","","Dynamic","face_box_tiled3.png",particletexture3,smokeparticletexture3,"False",50,10)
-			end
-		end
-		-- add a load of boxes
-		for x=1,6,1 do 
-			for y=1,4,1 do 
-				add_actor(x,y-8,1,1,0.02,0.2,0.1,"Box","","Dynamic","face_box_tiled1.png",particletexture1,smokeparticletexture1,"False",50,10)
-			end
-		end
-		
-		-- add treasure
-		add_actor(0,0,1,1,0.8,0.3,0.4,"Box","","Dynamic","treasure_box_tiled1.png",particletexture5,smokeparticletexture1,"False",200,5000)
-
-		
-		cameraprop:setLoc(-15,camerapropy)	
-		fitter:insertAnchor ( anchor ) -- add camera anchor    
 end
-
-end
-
 
 
 function start_level(currentlevel)
-	
+
 c=0
 score=0
 pointercalls=0
