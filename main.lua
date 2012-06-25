@@ -1578,18 +1578,18 @@ if mousedown==true then
 				actor_bodies[currentplayer]:setTransform(mouseX,mouseY,0)
 				setx=mouseX
 				sety=mouseY
-				throwx=setx- -15
-				throwy=sety- -5
+				throwx=setx- actor_fixtures[currentplayer].startx
+				throwy=sety- actor_fixtures[currentplayer].starty
 			end
 			if (distance>2) then
-				tx = mouseX - -15
-				ty = mouseY - -5
+				tx = mouseX - actor_fixtures[currentplayer].startx
+				ty = mouseY - actor_fixtures[currentplayer].starty
 				radians=math.atan2(ty,tx)
-				setx=math.cos(radians) * 2 + -15
-				sety=math.sin(radians) * 2 + -5
+				setx=math.cos(radians) * 2 + actor_fixtures[currentplayer].startx
+				sety=math.sin(radians) * 2 + actor_fixtures[currentplayer].starty
 			    actor_bodies[currentplayer]:setTransform(setx,sety,0)
-				throwx=setx- -15
-				throwy=sety- -5
+				throwx=setx- actor_fixtures[currentplayer].startx
+				throwy=sety- actor_fixtures[currentplayer].starty
 			end	
 			
 			actor_bodies[currentplayer].setx=throwx
@@ -1907,10 +1907,13 @@ if down==false then
 			    smoke(bx,by,smokeparticletexture1,1,1)		
 				layer:removeProp ( actor_sprites[currentplayer] )
 				actor_fixtures[currentplayer]:getBody():destroy()
-				add_actor(bx,by+0.25,0.75,0.75,0.5,0.3,0.2,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"False",2000,0,(actor_bodies[currentplayer].setx)*-10,(actor_bodies[currentplayer].sety)*-10)
+				add_actor(bx,by+0.25,0.75,0.75,0.5,0.3,0.2,"Player2","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"False",2000,0,(actor_bodies[currentplayer].setx)*-10,(actor_bodies[currentplayer].sety)*-10)
 				anchor2:setParent ( actor_sprites[c-1] )
 				fitter:insertAnchor ( anchor2 )
 				fitter:removeAnchor(anchor)
+				
+				callWithDelay ( 3, add_character)
+				callWithDelay ( 5, remove_character,{number = c-1})		
 		end
 		
 
@@ -1934,6 +1937,24 @@ end
 
 
 
+end
+
+
+function add_character()
+	add_actor(-15,-5,0.75,0.75,0.9,0.5,0.1,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"True",2000)
+	anchor2:setParent ( actor_sprites[c-1] )
+	fitter:insertAnchor ( anchor2 )
+	fitter:removeAnchor(anchor)
+end
+
+function remove_character(params)
+	number=params.number
+	print ("number="..number)
+	bx,by=actor_bodies[number]:getPosition()
+	--confetti(bx,by,particletexture5,1,1)
+	smoke(bx,by,smokeparticletexture4,0.5,0.5)
+	layer:removeProp ( actor_sprites[number] )
+	actor_fixtures[number]:getBody():destroy()
 end
 
 function point_to_game()
@@ -2272,6 +2293,11 @@ if (actorname=="Player8") then
 	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
 	actor_sprites[c]:setDeck ( tileLib )
 	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
+	actor_fixtures[c].startx=x
+	actor_fixtures[c].starty=y
+	actor_bodies[c].setx=0
+	actor_bodies[c].sety=0
+	
 end
 
 if actorname=="Box" then
@@ -2568,7 +2594,7 @@ if level==5 then
 		end
 		
 		-- add treasure
-		add_actor(0,0,1,1,0.8,0.3,0.4,"Box","","Dynamic","treasure_box_tiled1.png",particletexture5,smokeparticletexture1,"False",200,5000)
+		add_actor(0,0,1,1,0.8,0.3,0.4,"Box","","Dynamic","treasure_box_tiled1.png",particletexture5,smokeparticletexture1,"False",100,5000)
 
 		
 		cameraprop:setLoc(-15,camerapropy)	
