@@ -120,6 +120,7 @@ function init()
 	c=0
 	mainplayer=0
 	mainxoffset=0
+	reset_camera_ok=true
 	
 	currentlevel=1
 
@@ -1558,6 +1559,7 @@ if mousedown==true then
 
 	if playerpicked~=true and gamepick~=true then
 		panning=true
+		reset_camera_ok=false
 
 	end
 
@@ -1944,7 +1946,9 @@ if down==false then
 				fitter:removeAnchor(anchor)
 				
 				callWithDelay ( 3, add_character)
-				callWithDelay ( 5, remove_character,{number = c-1})		
+				callWithDelay ( 7, remove_character,{number = c-1})	
+				callWithDelay ( 8, reset_camera,{number = c-1})	
+				reset_camera_ok=true
 		end
 		
 
@@ -1974,8 +1978,9 @@ end
 function add_character()
 	add_actor(-15,-5,0.75,0.75,0.9,0.5,0.1,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"True",2000)
 	anchor2:setParent ( actor_sprites[c-1] )
-	fitter:insertAnchor ( anchor2 )
+	--fitter:insertAnchor ( anchor2 )
 	fitter:removeAnchor(anchor)
+	fitter:removeAnchor(anchor2)
 end
 
 function remove_character(params)
@@ -1986,6 +1991,13 @@ function remove_character(params)
 	smoke(bx,by,smokeparticletexture4,0.5,0.5)
 	layer:removeProp ( actor_sprites[number] )
 	actor_fixtures[number]:getBody():destroy()
+	
+end
+function reset_camera(params)
+	print ("reset camera")
+	if (reset_camera_ok==true) then
+		fitter:insertAnchor ( anchor ) -- add camera anchor  
+	end
 end
 
 function point_to_game()
@@ -2623,12 +2635,24 @@ add_actor(1.609375,-2.75,0.5,0.5,0.05,0.3,0.1,'Triangle','','Dynamic','face_tria
 add_actor(2.875,-2.75,0.5,0.5,0.05,0.3,0.1,'Triangle','','Dynamic','face_triangle_tiled1.png',particletexture1,smokeparticletexture1,'False','200')
 
 
-		
-		
+
+add_actor(6.5,-7,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(7.75,-7,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(9,-7,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(10.25,-7,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(7,-6,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(8.25,-6,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(9.5,-6,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(7.5,-5,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(8.75,-5,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+add_actor(8,-4,1,1,0.05,0.3,0.1,'Box','','Dynamic','face_box_tiled1.png',particletexture1,smokeparticletexture1,'False',20,10)
+
+
+
         --add some player objects
 		--x,y,width,height,density,friction,restitution,
 		
-        add_actor(-1,-5,0.75,0.75,0.9,0.5,0.1,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"True",2000)
+        add_actor(-15,-5,0.75,0.75,0.9,0.5,0.1,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"True",2000)
         mainplayer=c-1
 		
 				
@@ -2651,7 +2675,7 @@ add_actor(2.875,-2.75,0.5,0.5,0.05,0.3,0.1,'Triangle','','Dynamic','face_triangl
 		add_actor(0,0,1,1,0.8,0.3,0.4,"Box","","Dynamic","treasure_box_tiled1.png",particletexture5,smokeparticletexture1,"False",100,5000)
 
 		]]--
-		cameraprop:setLoc(-1,camerapropy)	
+		cameraprop:setLoc(-15,camerapropy)	
 		fitter:insertAnchor ( anchor ) -- add camera anchor    
 end
 
