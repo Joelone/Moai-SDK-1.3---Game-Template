@@ -120,6 +120,8 @@ function init()
 	c=0
 	mainplayer=0
 	mainxoffset=0
+	
+	currentlevel=1
 
 	width=0.1
 	maximumwidth=2
@@ -1708,8 +1710,14 @@ if down==true then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
-				actor_bodies[mainplayer]:applyLinearImpulse ( 0,2,bx,by )
-				anchor2:setParent ( actor_sprites[mainplayer] )
+				angle=actor_bodies[mainplayer]:getAngle()
+				
+				angleInRadians = angle/180 * math.pi
+				acc=2
+				xAcc = math.cos(angleInRadians) * acc
+				yAcc = math.sin(angleInRadians) * acc
+
+				actor_bodies[mainplayer]:applyLinearImpulse ( xAcc,yAcc,bx,by )
 			end
 
 		end
@@ -1720,19 +1728,27 @@ if down==true then
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 				actor_bodies[mainplayer]:applyLinearImpulse ( 0,-2,bx,by )
-				anchor2:setParent ( actor_sprites[mainplayer] )
 			end
 		end
 
 		if pick.name=="button_game_left" then
 			
-			if (actor_fixtures[mainplayer].name=="Player1"  or actor_fixtures[mainplayer].name=="Player2" or actor_fixtures[mainplayer].name=="Player3"  or actor_fixtures[mainplayer].name=="Player4" or actor_fixtures[mainplayer].name=="Player5") then
+			if (actor_fixtures[mainplayer].name=="Player1"  or actor_fixtures[mainplayer].name=="Player2" or actor_fixtures[mainplayer].name=="Player3" or actor_fixtures[mainplayer].name=="Player5") then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 				actor_bodies[mainplayer]:applyLinearImpulse ( -1,0,bx,by )
 				anchor2:setParent ( actor_sprites[mainplayer] )
 			end
+			
+			if (actor_fixtures[mainplayer].name=="Player4") then
+				cx,cy=camera:getLoc()
+				bx,by=actor_bodies[mainplayer]:getPosition()
+				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
+				actor_bodies[mainplayer]:applyAngularImpulse ( 2 )
+				anchor2:setParent ( actor_sprites[mainplayer] )
+			end
+			
 			if actor_fixtures[mainplayer].name=="Player7" then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
@@ -1744,11 +1760,19 @@ if down==true then
 		end
 
 		if pick.name=="button_game_right" then
-			if (actor_fixtures[mainplayer].name=="Player1"  or actor_fixtures[mainplayer].name=="Player2" or actor_fixtures[mainplayer].name=="Player3"  or actor_fixtures[mainplayer].name=="Player4" or actor_fixtures[mainplayer].name=="Player5") then
+			if (actor_fixtures[mainplayer].name=="Player1"  or actor_fixtures[mainplayer].name=="Player2" or actor_fixtures[mainplayer].name=="Player3" or actor_fixtures[mainplayer].name=="Player5") then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
 				actor_bodies[mainplayer]:applyLinearImpulse ( 1,0,bx,by )
+				anchor2:setParent ( actor_sprites[mainplayer] )
+			end
+			
+			if (actor_fixtures[mainplayer].name=="Player4") then
+				cx,cy=camera:getLoc()
+				bx,by=actor_bodies[mainplayer]:getPosition()
+				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
+				actor_bodies[mainplayer]:applyAngularImpulse ( -2 )
 				anchor2:setParent ( actor_sprites[mainplayer] )
 			end
 			
@@ -1769,7 +1793,7 @@ if down==true then
 		end
 	end
 
-	if gamepick==nil then
+	if (gamepick==nil and currentlevel~=3) then
 		fitter:removeAnchor(anchor2)
 		fitter:insertAnchor ( anchor ) -- add camera anchor  
 		cx,cy=camera:getLoc()
@@ -1863,15 +1887,22 @@ if down==false then
 		if (actor_fixtures[currentplayer].name=="Player4") then
 
 			bx,by=actor_bodies[currentplayer]:getPosition()
+			angle=actor_bodies[currentplayer]:getAngle()
+			
+				
+				angleInRadians = angle/180 * math.pi
+				acc=20
+				xAcc = math.cos(angleInRadians)
+				yAcc = math.sin(angleInRadians)
 
 			if (MOAIEnvironment.OS_BRAND_ANDROID==1 or MOAIEnvironment.OS_BRAND_IOS==1) then
 				--actor_bodies[currentplayer]:setLinearVelocity((y-lastY)/10*-1,(lastX-x)/10)
-				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10,(y-lastY)/10)
+				add_actor(bx+xAcc*0.25,by+yAcc*0.25,0.25,0.25,0.5,0.3,0.2,"CircleBullet","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",10,0,xAcc*acc,yAcc*acc)
 			end
 
 			if (MOAIEnvironment.OS_BRAND_ANDROID~=1 and MOAIEnvironment.OS_BRAND_IOS~=1) then
 				--actor_bodies[currentplayer]:setLinearVelocity((lastX-x)/10,(y-lastY)/10)
-				add_actor(bx,by+0.25,0.5,0.5,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000,100,(lastX-x)/10*-1,(y-lastY)/10)
+				add_actor(bx+xAcc*0.25,by+yAcc*0.25,0.25,0.25,0.5,0.3,0.2,"Player","","Dynamic","face_circle_tiled3.png",particletexture1,smokeparticletexture1,"False",2000,100,xAcc*acc,yAcc*acc)
 			end
 		end
 		
@@ -2401,6 +2432,7 @@ end
 
 function loadlevel(level)
 
+currentlevel=level
 setupRotationSensor()
 
 if level==1 then
@@ -2481,11 +2513,6 @@ if level==3 then
 		add_actor(10,0,5,90,0.02,0.3,0,"Wall","","Static","smokeparticle1.png",particletexture1,smokeparticletexture1,"False",10000000)	
 		
 
-        --add some player objects
-        add_actor(-2,-5,1.5,1.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled2.png",particletexture1,smokeparticletexture1,"False",2000)
-        mainplayer=c-1
-        anchor2:setParent ( actor_sprites[mainplayer] )
-        fitter:insertAnchor ( anchor2 ) -- anchor camera to player object
 		
 		-- add a load of boxes
 		for x=1,3,1 do 
@@ -2499,6 +2526,13 @@ if level==3 then
 				add_actor(x-2,y,x/5,x/5,0.5,0.7,0.4,"Box","","Dynamic","face_box_tiled2.png",particletexture2,smokeparticletexture2,"False",80,10)
 			end
 		end
+		
+		
+        --add some player objects
+        add_actor(-2,-5,1.5,1.5,0.5,0.3,0.2,"Player4","","Dynamic","face_circle_tiled7.png",particletexture4,smokeparticletexture4,"False",2000)
+        mainplayer=c-1
+        anchor2:setParent ( actor_sprites[mainplayer] )
+        fitter:insertAnchor ( anchor2 ) -- anchor camera to player object
 		
 end
 if level==4 then
@@ -2574,11 +2608,31 @@ if level==5 then
 		--add_actor(-10,0,5,90,0.02,0.3,0,"Wall","","Static","particle2.png",particletexture1,smokeparticletexture1,"False",10000000)	
 		--add_actor(10,0,5,90,0.02,0.3,0,"Wall","","Static","particle2.png",particletexture1,smokeparticletexture1,"False",10000000)
 
+add_actor(1.25,-5,1,1,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(1.625,-6.5,0.25,2,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(0.875,-6.5,0.25,2,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(2.25,-4.375,2,0.25,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(3.25,-5,1,1,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(2.875,-6.5,0.25,2,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(3.625,-6.5,0.25,2,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(1.375,-3.75,0.25,1,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(1.875,-3.75,0.25,1,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(3.125,-3.75,0.25,1,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(2.625,-3.75,0.25,1,0.6,0.3,0.1,'Box','','Dynamic','face_box_tiled4.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(1.609375,-2.75,0.5,0.5,0.05,0.3,0.1,'Triangle','','Dynamic','face_triangle_tiled1.png',particletexture1,smokeparticletexture1,'False','200')
+add_actor(2.875,-2.75,0.5,0.5,0.05,0.3,0.1,'Triangle','','Dynamic','face_triangle_tiled1.png',particletexture1,smokeparticletexture1,'False','200')
+
+
+		
+		
         --add some player objects
 		--x,y,width,height,density,friction,restitution,
 		
-        add_actor(-15,-5,0.75,0.75,0.9,0.5,0.1,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"True",2000)
+        add_actor(-1,-5,0.75,0.75,0.9,0.5,0.1,"Player8","","Dynamic","face_circle_tiled6.png",particletexture1,smokeparticletexture3,"True",2000)
         mainplayer=c-1
+		
+				
+		--[[
 		
 		-- add a load of boxes
 		for x=1,3,1 do 
@@ -2596,8 +2650,8 @@ if level==5 then
 		-- add treasure
 		add_actor(0,0,1,1,0.8,0.3,0.4,"Box","","Dynamic","treasure_box_tiled1.png",particletexture5,smokeparticletexture1,"False",100,5000)
 
-		
-		cameraprop:setLoc(-15,camerapropy)	
+		]]--
+		cameraprop:setLoc(-1,camerapropy)	
 		fitter:insertAnchor ( anchor ) -- add camera anchor    
 end
 
