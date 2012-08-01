@@ -5,6 +5,7 @@ function init()
 	screen_height=MOAIEnvironment.screenHeight
 
 	adirectory=MOAIEnvironment.documentDirectory
+	adirectory=nil
 	osbrand=MOAIEnvironment.osBrand
 
 	if osbrand==nil then osbrand='None' end
@@ -452,7 +453,8 @@ function loadresources()
 	-- backgrounds
 
 	update_loading(100)
-	callWithDelay ( 0.1, fadeoutSplash)
+	--callWithDelay ( 0.1, fadeoutSplash)
+	fadeoutSplash()
 end
 
 -- USEFUL FUNCTIONS --
@@ -483,6 +485,7 @@ function callWithDelay ( delay, func,...)
 	timer:setSpan ( delay )
 	timer:setListener ( MOAITimer.EVENT_TIMER_LOOP,
 	function ()
+		
 		timer:stop ()
 		timer = nil
 		func ( unpack ( arg ))
@@ -524,7 +527,8 @@ end
 function fadeoutSplash()
 	loading:seekColor ( 0,0,0,0, 3 )
 	fadeoutAction = logo:seekColor ( 0,0,0,0, 3 )
-	callWithDelay ( 2, game_menu)
+	--callWithDelay ( 2, game_menu)
+	game_menu()
 end
 
 -- GAME MENU --
