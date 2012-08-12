@@ -190,6 +190,7 @@ function init()
 	trackplayer=false
 	mouseuptimer=0
 	mousedowntimer=0
+	
 end
 
 function loadresources()
@@ -454,6 +455,7 @@ function loadresources()
 
 	update_loading(100)
 	--callWithDelay ( 0.1, fadeoutSplash)
+	
 	fadeoutSplash()
 end
 
@@ -494,6 +496,7 @@ function callWithDelay ( delay, func,...)
 	timer:start ()
 end
 
+
 -- SPLASH --
 function fadeinSplash()
 	layer_splash:setViewport ( viewport )
@@ -505,30 +508,19 @@ function fadeinSplash()
 	logo:setDeck ( logoGfx )
 
 	layer_splash:insertProp ( logo )
-	--logo:seekColor ( 0,0,0,0,0)
-
-	--loading bar
-
 	percent=1
 	timer=0
-	layer_splash:insertProp ( loading )
 
-	--fadeinAction = logo:seekColor ( 1, 1, 1, 1, 2)
-	--[[
-	stab = MOAIUntzSound.new ()
-	stab:load (  assetdirectory..'stab.wav' )
-	stab:setVolume ( 1 )
-	stab:setLooping ( false )
-	stab:play ()
-	--]]
-	--callWithDelay ( 2, fadeoutSplash)
 end
 
 function fadeoutSplash()
 	loading:seekColor ( 0,0,0,0, 3 )
 	fadeoutAction = logo:seekColor ( 0,0,0,0, 3 )
-	--callWithDelay ( 2, game_menu)
-	game_menu()
+	timer = MOAITimer.new ()
+	timer:setMode ( MOAITimer.NORMAL )
+	timer:setListener ( MOAITimer.EVENT_TIMER_END_SPAN, game_menu )
+	timer:setSpan ( 2 )
+	timer:start ()
 end
 
 -- GAME MENU --
@@ -1719,7 +1711,7 @@ if down==true then
 				angle=actor_bodies[mainplayer]:getAngle()
 				
 				angleInRadians = angle/180 * math.pi
-				acc=2
+				acc=0.5
 				xAcc = math.cos(angleInRadians) * acc
 				yAcc = math.sin(angleInRadians) * acc
 
@@ -1751,7 +1743,7 @@ if down==true then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
-				actor_bodies[mainplayer]:applyAngularImpulse ( 2 )
+				actor_bodies[mainplayer]:applyAngularImpulse ( 0.2 )
 				anchor2:setParent ( actor_sprites[mainplayer] )
 			end
 			
@@ -1759,7 +1751,7 @@ if down==true then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
-				actor_bodies[mainplayer]:applyLinearImpulse ( -0.02 )
+				actor_bodies[mainplayer]:applyLinearImpulse ( -0.2,0 )
 				anchor2:setParent ( actor_sprites[mainplayer] )
 			end
 
@@ -1778,7 +1770,7 @@ if down==true then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
-				actor_bodies[mainplayer]:applyAngularImpulse ( -2 )
+				actor_bodies[mainplayer]:applyAngularImpulse ( -0.2 )
 				anchor2:setParent ( actor_sprites[mainplayer] )
 			end
 			
@@ -1786,7 +1778,7 @@ if down==true then
 				cx,cy=camera:getLoc()
 				bx,by=actor_bodies[mainplayer]:getPosition()
 				vx,vy=actor_bodies[mainplayer]:getLinearVelocity()
-				actor_bodies[mainplayer]:applyLinearImpulse ( 0.02 )
+				actor_bodies[mainplayer]:applyLinearImpulse ( 0.2,0 )
 				anchor2:setParent ( actor_sprites[mainplayer] )
 			end
 
@@ -1949,9 +1941,29 @@ if down==false then
 				fitter:insertAnchor ( anchor2 )
 				fitter:removeAnchor(anchor)
 				
-				callWithDelay ( 3, add_character)
-				callWithDelay ( 7, remove_character,{number = c-1})	
-				callWithDelay ( 8, reset_camera,{number = c-1})	
+				--callWithDelay ( 3, add_character)
+				--callWithDelay ( 7, remove_character,{number = c-1})	
+				--callWithDelay ( 8, reset_camera,{number = c-1})	
+				
+				timer = MOAITimer.new ()
+				timer:setMode ( MOAITimer.NORMAL )
+				timer:setListener ( MOAITimer.EVENT_TIMER_END_SPAN, add_character )
+				timer:setSpan ( 7 )
+				timer:start ()
+				
+				timer2 = MOAITimer.new ()
+				timer2:setMode ( MOAITimer.NORMAL )
+				destroy=c-1
+				timer2:setListener ( MOAITimer.EVENT_TIMER_END_SPAN, remove_character,{destroy=number})
+				timer2:setSpan ( 6 )
+				timer2:start ()
+				
+				timer3 = MOAITimer.new ()
+				timer3:setMode ( MOAITimer.NORMAL )
+				timer3:setListener ( MOAITimer.EVENT_TIMER_END_SPAN, reset_camera )
+				timer3:setSpan ( 8 )
+				timer3:start ()
+				
 				reset_camera_ok=true
 		end
 		
@@ -1987,8 +1999,8 @@ function add_character()
 	fitter:removeAnchor(anchor2)
 end
 
-function remove_character(params)
-	number=params.number
+function remove_character(...)
+	number=destroy
 	print ("number="..number)
 	bx,by=actor_bodies[number]:getPosition()
 	--confetti(bx,by,particletexture5,1,1)
@@ -2299,6 +2311,8 @@ if (actorname=="Player4") then
 	tileLib:setRect ( width/2*-1,height/2*-1,width/2,height/2)
 	actor_sprites[c]:setDeck ( tileLib )
 	actor_fixtures[c] = actor_bodies[c]:addCircle ( 0,0,width/2)
+	actor_bodies[c]:setAngularDamping( 1 )
+	
 end
 
 if (actorname=="Player5") then
